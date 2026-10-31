@@ -173,9 +173,44 @@ def run_tests():
     max_val = 0.0 if not empty_history else max(empty_history)
     assert_eq(min_val == 0.0 and max_val == 0.0, True, "Empty history safely defaults without divide-by-zero or crash")
 
+    # Round 11: Fixture Payload Integrity Checks
+    print("\nRound 11: Fixture Payload Integrity Checks")
+    import os
+    fixtures = [
+        "fixtures/sample_backup.json",
+        "fixtures/sample_workouts.csv",
+        "fixtures/sample_exercises.csv",
+        "fixtures/sample_measurements.csv"
+    ]
+    for fix in fixtures:
+        exists = os.path.isfile(fix)
+        assert_eq(exists, True, f"Fixture file exists: {fix}")
+    
+    with open("fixtures/sample_backup.json", "r") as f:
+        backup_data = json.load(f)
+        assert_eq(backup_data["app"], "FitLog Pro", "sample_backup.json contains correct app header")
+        assert_eq(len(backup_data["exercises"]) > 0, True, "sample_backup.json contains seed exercises")
+
+    # Round 12: Architectural Documentation Verification
+    print("\nRound 12: Architecture & Specification Docs")
+    docs = [
+        "README.md",
+        "ARCHITECTURE.md",
+        "DATABASE_SCHEMA.md",
+        "RISK_MITIGATION.md",
+        "TESTING_GUIDE.md",
+        "VERIFICATION_REPORT.md",
+        "CONTRIBUTING.md",
+        "THIRD_PARTY_NOTICES.md"
+    ]
+    for d in docs:
+        exists = os.path.isfile(d)
+        assert_eq(exists, True, f"Documentation file exists: {d}")
+
     print("\n============================================================")
     print(f"  🏆 ALL {passed}/{total} VERIFICATION CHECKS PASSED SUCCESSFULLY!")
     print("============================================================")
 
 if __name__ == "__main__":
     run_tests()
+
