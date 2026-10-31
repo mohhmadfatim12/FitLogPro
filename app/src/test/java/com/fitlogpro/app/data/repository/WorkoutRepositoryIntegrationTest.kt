@@ -57,7 +57,6 @@ class WorkoutRepositoryIntegrationTest {
 
         override suspend fun updateWorkout(workout: WorkoutEntity) {}
         override suspend fun deleteWorkout(workout: WorkoutEntity) {}
-        override suspend fun deleteWorkoutById(workoutId: Long) {}
         override suspend fun deleteWorkoutExercises(workoutId: Long) {}
         override fun getCompletedSetsForExercise(exerciseId: Long): Flow<List<WorkoutSetEntity>> = flowOf(emptyList())
         override suspend fun getExercisePerformanceHistory(exerciseId: Long): List<com.fitlogpro.app.data.local.dao.ExerciseHistoryRow> = emptyList()
@@ -73,17 +72,24 @@ class WorkoutRepositoryIntegrationTest {
         override fun getAllPrs(): Flow<List<PersonalRecordEntity>> = flowOf(prs)
         override fun getPrsForExercise(exerciseId: Long): Flow<List<PersonalRecordEntity>> =
             flowOf(prs.filter { it.exerciseId == exerciseId })
-        override suspend fun getPrForExerciseAndType(exerciseId: Long, prType: PRType): PersonalRecordEntity? =
-            prs.find { it.exerciseId == exerciseId && it.prType == prType }
+        override suspend fun getBestPrForExercise(exerciseId: Long, prType: PRType): PersonalRecordEntity? =
+            prs.filter { it.exerciseId == exerciseId && it.prType == prType }.maxByOrNull { it.value }
+        override suspend fun getAllPrsForExerciseSync(exerciseId: Long): List<PersonalRecordEntity> =
+            prs.filter { it.exerciseId == exerciseId }
         override suspend fun insertPr(pr: PersonalRecordEntity): Long {
             val id = nextId++
             prs.add(pr.copy(id = id))
             return id
         }
-        override suspend fun insertPrs(prsList: List<PersonalRecordEntity>) {
+        override suspend fun insertAll(prsList: List<PersonalRecordEntity>) {
             prsList.forEach { insertPr(it) }
         }
-        override suspend fun deletePrsForExercise(exerciseId: Long) {}
+        override suspend fun deletePr(pr: PersonalRecordEntity) {
+            prs.removeIf { it.id == pr.id }
+        }
+        override suspend fun deleteAllForExercise(exerciseId: Long) {
+            prs.removeIf { it.exerciseId == exerciseId }
+        }
     }
 
     private class FakeRoutineDao : RoutineDao {

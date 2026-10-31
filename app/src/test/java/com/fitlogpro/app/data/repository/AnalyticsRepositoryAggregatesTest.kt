@@ -40,7 +40,6 @@ class AnalyticsRepositoryAggregatesTest {
         override suspend fun insertWorkoutSets(sets: List<WorkoutSetEntity>) {}
         override suspend fun updateWorkout(workout: WorkoutEntity) {}
         override suspend fun deleteWorkout(workout: WorkoutEntity) {}
-        override suspend fun deleteWorkoutById(workoutId: Long) {}
         override suspend fun deleteWorkoutExercises(workoutId: Long) {}
         override fun getCompletedSetsForExercise(exerciseId: Long): Flow<List<WorkoutSetEntity>> = flowOf(emptyList())
         override suspend fun getExercisePerformanceHistory(exerciseId: Long): List<ExerciseHistoryRow> = perfRows
