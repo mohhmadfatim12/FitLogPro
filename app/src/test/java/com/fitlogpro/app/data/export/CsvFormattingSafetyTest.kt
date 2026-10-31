@@ -110,7 +110,7 @@ class CsvFormattingSafetyTest {
             measurementType = MeasurementType.WEIGHT,
             value = 85.5,
             unit = "kg",
-            timestampEpochMs = 1700000000000L,
+            recordedEpochMs = 1700000000000L,
             notes = "Morning weight, post-bathroom, \"fasted\" condition"
         )
 

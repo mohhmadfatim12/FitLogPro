@@ -58,7 +58,7 @@ class ActiveWorkoutRecoveryTest {
                     exerciseName = "Plank",
                     muscleGroup = MuscleGroup.CORE,
                     equipment = Equipment.BODYWEIGHT,
-                    exerciseType = ExerciseType.CARDIO_DURATION,
+                    exerciseType = ExerciseType.CARDIO,
                     defaultRestSeconds = 60,
                     sets = listOf(
                         LiveWorkoutSet(

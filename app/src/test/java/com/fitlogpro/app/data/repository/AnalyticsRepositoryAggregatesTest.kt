@@ -1,8 +1,8 @@
 package com.fitlogpro.app.data.repository
 
+import com.fitlogpro.app.data.local.dao.ExerciseHistoryRow
 import com.fitlogpro.app.data.local.dao.WorkoutDao
 import com.fitlogpro.app.data.local.entity.ExerciseEntity
-import com.fitlogpro.app.data.local.entity.ExercisePerformanceRow
 import com.fitlogpro.app.data.local.entity.WorkoutEntity
 import com.fitlogpro.app.data.local.entity.WorkoutExerciseEntity
 import com.fitlogpro.app.data.local.entity.WorkoutExerciseWithSets
@@ -26,7 +26,7 @@ class AnalyticsRepositoryAggregatesTest {
     private class MockWorkoutDaoForAnalytics(
         val workoutsList: List<WorkoutEntity> = emptyList(),
         val workoutsWithDetailsList: List<WorkoutWithDetails> = emptyList(),
-        val perfRows: List<ExercisePerformanceRow> = emptyList()
+        val perfRows: List<ExerciseHistoryRow> = emptyList()
     ) : WorkoutDao {
         override fun getAllWorkouts(): Flow<List<WorkoutEntity>> = flowOf(workoutsList)
         override fun getAllWorkoutsWithDetails(): Flow<List<WorkoutWithDetails>> = flowOf(workoutsWithDetailsList)
@@ -41,7 +41,12 @@ class AnalyticsRepositoryAggregatesTest {
         override suspend fun updateWorkout(workout: WorkoutEntity) {}
         override suspend fun deleteWorkout(workout: WorkoutEntity) {}
         override suspend fun deleteWorkoutById(workoutId: Long) {}
-        override suspend fun getExercisePerformanceHistory(exerciseId: Long): List<ExercisePerformanceRow> = perfRows
+        override suspend fun deleteWorkoutExercises(workoutId: Long) {}
+        override fun getCompletedSetsForExercise(exerciseId: Long): Flow<List<WorkoutSetEntity>> = flowOf(emptyList())
+        override suspend fun getExercisePerformanceHistory(exerciseId: Long): List<ExerciseHistoryRow> = perfRows
+        override suspend fun getWorkoutCount(): Int = workoutsList.size
+        override suspend fun getTotalVolumeAllTime(): Double = workoutsList.sumOf { it.totalVolumeKg }
+        override suspend fun getTotalDurationAllTime(): Long = workoutsList.sumOf { it.durationSeconds }
     }
 
     @Test

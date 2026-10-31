@@ -58,6 +58,12 @@ class WorkoutRepositoryIntegrationTest {
         override suspend fun updateWorkout(workout: WorkoutEntity) {}
         override suspend fun deleteWorkout(workout: WorkoutEntity) {}
         override suspend fun deleteWorkoutById(workoutId: Long) {}
+        override suspend fun deleteWorkoutExercises(workoutId: Long) {}
+        override fun getCompletedSetsForExercise(exerciseId: Long): Flow<List<WorkoutSetEntity>> = flowOf(emptyList())
+        override suspend fun getExercisePerformanceHistory(exerciseId: Long): List<com.fitlogpro.app.data.local.dao.ExerciseHistoryRow> = emptyList()
+        override suspend fun getWorkoutCount(): Int = workouts.size
+        override suspend fun getTotalVolumeAllTime(): Double = workouts.sumOf { it.totalVolumeKg }
+        override suspend fun getTotalDurationAllTime(): Long = workouts.sumOf { it.durationSeconds }
     }
 
     private class FakePrDao : PersonalRecordDao {
