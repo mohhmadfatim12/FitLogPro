@@ -1,0 +1,221 @@
+{
+  "app": "FitLog Pro",
+  "version": 1,
+  "exportedAtEpochMs": 1700000000000,
+  "exercises": [
+    {
+      "id": 1,
+      "name": "Barbell Bench Press",
+      "muscleGroup": "CHEST",
+      "equipment": "BARBELL",
+      "exerciseType": "WEIGHT_AND_REPS",
+      "defaultRestSeconds": 120,
+      "isCustom": false,
+      "instructions": "Retract scapulae, touch lower sternum, press up explosively.",
+      "isFavorite": true
+    },
+    {
+      "id": 2,
+      "name": "Incline Dumbbell Press",
+      "muscleGroup": "CHEST",
+      "equipment": "DUMBBELL",
+      "exerciseType": "WEIGHT_AND_REPS",
+      "defaultRestSeconds": 90,
+      "isCustom": false,
+      "instructions": "Set bench to 30 degrees, press dumbbells overhead in an arc.",
+      "isFavorite": false
+    },
+    {
+      "id": 3,
+      "name": "Overhead Barbell Press",
+      "muscleGroup": "SHOULDERS",
+      "equipment": "BARBELL",
+      "exerciseType": "WEIGHT_AND_REPS",
+      "defaultRestSeconds": 120,
+      "isCustom": false,
+      "instructions": "Squeeze glutes and abs, press directly upward overhead.",
+      "isFavorite": true
+    },
+    {
+      "id": 4,
+      "name": "Barbell Squat",
+      "muscleGroup": "QUADS",
+      "equipment": "BARBELL",
+      "exerciseType": "WEIGHT_AND_REPS",
+      "defaultRestSeconds": 180,
+      "isCustom": false,
+      "instructions": "Break at hips and knees simultaneously, descend below parallel.",
+      "isFavorite": true
+    },
+    {
+      "id": 5,
+      "name": "Romanian Deadlift",
+      "muscleGroup": "HAMSTRINGS",
+      "equipment": "BARBELL",
+      "exerciseType": "WEIGHT_AND_REPS",
+      "defaultRestSeconds": 120,
+      "isCustom": false,
+      "instructions": "Hinge at the hips with slight knee bend, feel hamstring stretch.",
+      "isFavorite": true
+    }
+  ],
+  "routines": [
+    {
+      "id": 1,
+      "name": "Upper Body Power A",
+      "notes": "Primary heavy upper session focusing on horizontal push and pull.",
+      "exercises": [
+        {
+          "exerciseId": 1,
+          "orderIndex": 0,
+          "targetSets": 4,
+          "targetReps": 6,
+          "targetWeightKg": 100.0,
+          "targetRpe": 8.5,
+          "supersetGroupId": null,
+          "notes": "Heavy working sets"
+        },
+        {
+          "exerciseId": 2,
+          "orderIndex": 1,
+          "targetSets": 3,
+          "targetReps": 10,
+          "targetWeightKg": 32.0,
+          "targetRpe": 8.0,
+          "supersetGroupId": null,
+          "notes": "Hypertrophy focus"
+        }
+      ]
+    }
+  ],
+  "workouts": [
+    {
+      "id": 101,
+      "name": "Upper Body Power A",
+      "routineId": 1,
+      "startTimeEpochMs": 1700000000000,
+      "endTimeEpochMs": 1700004200000,
+      "durationSeconds": 4200,
+      "totalVolumeKg": 3360.0,
+      "notes": "Hit a new bench press PR on set 3!",
+      "exercises": [
+        {
+          "exerciseId": 1,
+          "orderIndex": 0,
+          "supersetGroupId": null,
+          "notes": "",
+          "sets": [
+            {
+              "setNumber": 1,
+              "setType": "WARMUP",
+              "weightKg": 60.0,
+              "reps": 10,
+              "rpe": 5.0,
+              "isCompleted": true,
+              "isPr": false,
+              "prTypesJson": "[]"
+            },
+            {
+              "setNumber": 2,
+              "setType": "WARMUP",
+              "weightKg": 80.0,
+              "reps": 5,
+              "rpe": 6.0,
+              "isCompleted": true,
+              "isPr": false,
+              "prTypesJson": "[]"
+            },
+            {
+              "setNumber": 3,
+              "setType": "NORMAL",
+              "weightKg": 105.0,
+              "reps": 6,
+              "rpe": 9.0,
+              "isCompleted": true,
+              "isPr": true,
+              "prTypesJson": "[\"HEAVIEST_WEIGHT\",\"BEST_1RM\"]"
+            },
+            {
+              "setNumber": 4,
+              "setType": "NORMAL",
+              "weightKg": 100.0,
+              "reps": 6,
+              "rpe": 8.5,
+              "isCompleted": true,
+              "isPr": false,
+              "prTypesJson": "[]"
+            },
+            {
+              "setNumber": 5,
+              "setType": "NORMAL",
+              "weightKg": 95.0,
+              "reps": 8,
+              "rpe": 9.0,
+              "isCompleted": true,
+              "isPr": false,
+              "prTypesJson": "[]"
+            },
+            {
+              "setNumber": 6,
+              "setType": "DROP_SET",
+              "weightKg": 70.0,
+              "reps": 12,
+              "rpe": 10.0,
+              "isCompleted": true,
+              "isPr": false,
+              "prTypesJson": "[]"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "personalRecords": [
+    {
+      "exerciseId": 1,
+      "prType": "HEAVIEST_WEIGHT",
+      "value": 105.0,
+      "achievedAtEpochMs": 1700004200000,
+      "notes": "105.0 kg x 6 reps"
+    },
+    {
+      "exerciseId": 1,
+      "prType": "BEST_1RM",
+      "value": 126.0,
+      "achievedAtEpochMs": 1700004200000,
+      "notes": "Epley: 105 * (1 + 6/30)"
+    }
+  ],
+  "bodyMeasurements": [
+    {
+      "measurementType": "WEIGHT",
+      "value": 82.5,
+      "recordedEpochMs": 1700000000000,
+      "notes": "Fasted morning weight"
+    },
+    {
+      "measurementType": "BODY_FAT",
+      "value": 14.5,
+      "recordedEpochMs": 1700000000000,
+      "notes": "Calipers 7-site test"
+    },
+    {
+      "measurementType": "CHEST",
+      "value": 106.0,
+      "recordedEpochMs": 1700000000000,
+      "notes": "Unflexed"
+    },
+    {
+      "measurementType": "WAIST",
+      "value": 83.5,
+      "recordedEpochMs": 1700000000000,
+      "notes": "At navel"
+    },
+    {
+      "measurementType": "ARMS",
+      "value": 40.5,
+      "recordedEpochMs": 1700000000000,
+      "notes": "Flexed right bicep"
+    }
+  ]
+}
