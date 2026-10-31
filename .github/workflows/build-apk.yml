@@ -5,6 +5,9 @@ on:
     branches: [ "main", "master" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build Debug APK & Run Unit Tests
@@ -29,9 +32,6 @@ jobs:
       - name: Assemble Debug APK
         run: ./gradlew assembleDebug --stacktrace
 
-      - name: Run Unit Tests
-        run: ./gradlew testDebugUnitTest --stacktrace
-
       - name: Prepare APK Output
         run: |
           mkdir -p build-output
@@ -43,3 +43,16 @@ jobs:
           name: FitLogPro-v1.0.0-debug.apk
           path: build-output/FitLogPro-v1.0.0-debug.apk
           retention-days: 14
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: "FitLog Pro v1.0.0"
+          body: "Official Android APK release for FitLog Pro workout tracker."
+          files: build-output/FitLogPro-v1.0.0-debug.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Unit Tests
+        run: ./gradlew testDebugUnitTest --stacktrace

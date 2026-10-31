@@ -55,4 +55,24 @@ object PersonalRecordDetector {
 
         return brokenPrs
     }
+
+    fun detectPersonalRecords(
+        weightKg: Double,
+        reps: Int,
+        isWarmup: Boolean,
+        prevMaxWeight: Double,
+        prev1Rm: Double,
+        prevMaxVol: Double,
+        prevMaxReps: Int
+    ): List<PRType> {
+        val setType = if (isWarmup) SetType.WARMUP else SetType.NORMAL
+        val existing = ExistingExercisePrs(
+            exerciseId = 0L,
+            heaviestWeightKg = prevMaxWeight,
+            bestEstimated1RmKg = prev1Rm,
+            bestSetVolumeKg = prevMaxVol,
+            mostReps = prevMaxReps
+        )
+        return detectNewPrs(weightKg, reps, setType, existing)
+    }
 }
