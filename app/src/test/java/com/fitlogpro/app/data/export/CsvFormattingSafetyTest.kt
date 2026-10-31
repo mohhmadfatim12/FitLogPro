@@ -45,7 +45,7 @@ class CsvFormattingSafetyTest {
             name = "Dumbbell Press, Flat (\"Heavy\")",
             muscleGroup = MuscleGroup.CHEST,
             equipment = Equipment.DUMBBELL,
-            type = ExerciseType.WEIGHT_AND_REPS,
+            exerciseType = ExerciseType.WEIGHT_AND_REPS,
             defaultRestSeconds = 90,
             isCustom = true,
             instructions = "Press up, squeeze \"chest\", don't lock out"
@@ -56,11 +56,11 @@ class CsvFormattingSafetyTest {
             workoutExerciseId = 1,
             setNumber = 1,
             setType = SetType.NORMAL,
-            weight = 40.0,
+            weightKg = 40.0,
             reps = 10,
             rpe = 8.5,
-            distanceMeters = null,
             durationSeconds = null,
+            distanceKm = null,
             calories = null,
             isCompleted = true,
             isPr = false
@@ -80,7 +80,7 @@ class CsvFormattingSafetyTest {
                 startTimeEpochMs = 1700000000000L,
                 endTimeEpochMs = 1700003600000L,
                 durationSeconds = 3600,
-                totalVolume = 400.0,
+                totalVolumeKg = 400.0,
                 notes = "Felt \"incredible\", but shoulders were sore, rest next time."
             ),
             exercises = listOf(workoutExercise)
@@ -107,7 +107,7 @@ class CsvFormattingSafetyTest {
     fun exportMeasurementsWithSpecialChars_formatsSafely() {
         val measurement = BodyMeasurementEntity(
             id = 1,
-            type = MeasurementType.WEIGHT,
+            measurementType = MeasurementType.WEIGHT,
             value = 85.5,
             unit = "kg",
             timestampEpochMs = 1700000000000L,
