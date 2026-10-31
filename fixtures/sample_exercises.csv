@@ -1,0 +1,11 @@
+ID,Exercise Name,Muscle Group,Equipment,Exercise Type,Default Rest (s),Is Custom,Instructions
+1,"Barbell Bench Press","Chest","Barbell","Weight & Reps",120,false,"Lie flat on bench, retract scapulae, lower bar to mid-chest, press up explosively."
+2,"Incline Dumbbell Press","Chest","Dumbbell","Weight & Reps",90,false,"Set bench to 30 degrees incline. Press dumbbells in an arching motion."
+3,"Chest Fly (Dumbbell)","Chest","Dumbbell","Weight & Reps",90,false,"Maintain slight elbow bend, stretch pectorals at bottom, squeeze together at top."
+4,"Overhead Barbell Press","Shoulders","Barbell","Weight & Reps",120,false,"Stand tall, brace core and glutes, press bar overhead vertically."
+5,"Lateral Dumbbell Raise","Shoulders","Dumbbell","Weight & Reps",60,false,"Raise arms laterally to shoulder height with slight elbow flexion."
+6,"Barbell Squat","Quads","Barbell","Weight & Reps",180,false,"Descend by breaking at hips and knees simultaneously, keep chest tall."
+7,"Leg Press","Quads","Machine","Weight & Reps",120,false,"Place feet shoulder-width, lower sled with control, do not lock out knees."
+8,"Romanian Deadlift","Hamstrings","Barbell","Weight & Reps",120,false,"Hinge at hips, keep bar close to shins, feel stretch in hamstrings."
+9,"Conventional Deadlift","Back","Barbell","Weight & Reps",180,false,"Hip hinge from the floor, brace lats and core, pull bar smoothly."
+10,"Pull Up","Back","Bodyweight","Bodyweight Reps",90,false,"Pronated grip, pull until chin clears the bar, control the eccentric."
