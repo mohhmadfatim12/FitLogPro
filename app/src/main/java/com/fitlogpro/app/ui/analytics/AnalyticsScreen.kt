@@ -91,7 +91,7 @@ fun AnalyticsScreen(
             item {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     StatCard(
-                        title = "Active Streak",
+                        title = "Streak",
                         value = "${streakInfo.currentStreakWeeks} wks",
                         subtitle = "Best: ${streakInfo.bestStreakWeeks} wks",
                         icon = Icons.Default.LocalFireDepartment,
@@ -99,7 +99,7 @@ fun AnalyticsScreen(
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
-                        title = "This Week",
+                        title = "Workouts",
                         value = "${streakInfo.workoutsThisWeek}",
                         subtitle = "${streakInfo.totalWorkoutsAllTime} all-time",
                         icon = Icons.Default.FitnessCenter,
@@ -107,7 +107,7 @@ fun AnalyticsScreen(
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
-                        title = "Total Volume",
+                        title = "Volume",
                         value = "${String.format("%,.0f", streakInfo.totalVolumeKgAllTime)} kg",
                         icon = Icons.Default.ShowChart,
                         iconTint = Color(0xFF10B981),
@@ -144,7 +144,7 @@ fun AnalyticsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Exercise Progression",
+                            text = "Progression",
                             color = textPrimary,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold

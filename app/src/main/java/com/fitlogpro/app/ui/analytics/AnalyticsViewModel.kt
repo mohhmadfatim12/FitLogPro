@@ -21,10 +21,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 enum class ChartMetric(val title: String, val unitSuffix: String) {
-    MAX_WEIGHT("Max Weight", "kg"),
-    ESTIMATED_1RM("Est. 1RM", "kg"),
+    MAX_WEIGHT("Max Wt", "kg"),
+    ESTIMATED_1RM("1RM", "kg"),
     TOTAL_VOLUME("Volume", "kg"),
-    MAX_REPS("Max Reps", "reps")
+    MAX_REPS("Reps", "reps")
 }
 
 class AnalyticsViewModel(

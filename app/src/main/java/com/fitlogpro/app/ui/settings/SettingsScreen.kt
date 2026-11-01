@@ -106,10 +106,11 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column {
+                        Column(modifier = Modifier.weight(1f)) {
                             Text("Weight Unit", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                            Text("Applies to exercises, 1RM, volume, and body weight", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
+                            Text("Applies to exercises, 1RM, and body weight", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                         }
+                        Spacer(modifier = Modifier.width(8.dp))
                         Row(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(8.dp))
@@ -129,10 +130,11 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column {
+                        Column(modifier = Modifier.weight(1f)) {
                             Text("Distance Unit", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                            Text("Applies to cardio running, cycling, and rowing", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
+                            Text("Applies to cardio running and cycling", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                         }
+                        Spacer(modifier = Modifier.width(8.dp))
                         Row(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(8.dp))

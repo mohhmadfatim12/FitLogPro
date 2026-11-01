@@ -34,7 +34,7 @@ val BottomTabs = listOf(
     BottomNavTab("History", NavRoute.History.route, Icons.Default.History),
     BottomNavTab("Insights", NavRoute.Analytics.route, Icons.Default.BarChart),
     BottomNavTab("Body", NavRoute.Measurements.route, Icons.Default.MonitorWeight),
-    BottomNavTab("Settings", NavRoute.Settings.route, Icons.Default.Settings)
+    BottomNavTab("More", NavRoute.Settings.route, Icons.Default.Settings)
 )
 
 @Composable

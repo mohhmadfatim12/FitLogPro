@@ -304,20 +304,22 @@ private fun MonthlyActivityBanner() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "26 Days Active",
                         color = MaterialTheme.colorScheme.onBackground,
-                        fontSize = 24.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.Black
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "Break your last record • 3 sessions left",
+                        text = "Break record • 3 sessions left",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 12.sp
                     )
                 }
+
+                Spacer(modifier = Modifier.width(12.dp))
 
                 // Circular Progress Ring Gauge
                 Box(
