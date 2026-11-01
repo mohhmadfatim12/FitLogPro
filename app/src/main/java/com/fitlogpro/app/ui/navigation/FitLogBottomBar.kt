@@ -30,10 +30,10 @@ data class BottomNavTab(
 )
 
 val BottomTabs = listOf(
-    BottomNavTab("Workouts", NavRoute.Routines.route, Icons.Default.FitnessCenter),
+    BottomNavTab("Plans", NavRoute.Routines.route, Icons.Default.FitnessCenter),
     BottomNavTab("History", NavRoute.History.route, Icons.Default.History),
-    BottomNavTab("Analytics", NavRoute.Analytics.route, Icons.Default.BarChart),
-    BottomNavTab("Body Stats", NavRoute.Measurements.route, Icons.Default.MonitorWeight),
+    BottomNavTab("Insights", NavRoute.Analytics.route, Icons.Default.BarChart),
+    BottomNavTab("Body", NavRoute.Measurements.route, Icons.Default.MonitorWeight),
     BottomNavTab("Settings", NavRoute.Settings.route, Icons.Default.Settings)
 )
 
@@ -71,6 +71,7 @@ fun FitLogBottomBar(
                         maxLines = 1
                     )
                 },
+                alwaysShowLabel = true,
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFF0F172A),
                     selectedTextColor = Color(0xFF0F172A),

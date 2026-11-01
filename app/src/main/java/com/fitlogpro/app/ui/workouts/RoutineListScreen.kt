@@ -272,7 +272,7 @@ private fun MonthlyActivityBanner() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "THIS MONTH'S ADHERENCE",
+                    text = "MONTHLY ACTIVITY",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
@@ -282,13 +282,14 @@ private fun MonthlyActivityBanner() {
                     modifier = Modifier
                         .clip(RoundedCornerShape(10.dp))
                         .background(ElectricLimeContainer)
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .padding(horizontal = 10.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        text = "88% Consistency",
+                        text = "88% Target",
                         color = ElectricLimeText,
                         fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
                     )
                 }
             }

@@ -64,7 +64,7 @@ fun ExerciseListScreen(
             FloatingActionButton(
                 onClick = onCreateExercise,
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = Color.White
+                contentColor = Color(0xFF0F172A)
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Exercise")
             }
@@ -181,9 +181,9 @@ private fun ExerciseRowCard(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surface)
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(12.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
             .padding(14.dp)
     ) {
