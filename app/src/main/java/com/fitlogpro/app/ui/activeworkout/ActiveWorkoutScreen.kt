@@ -28,7 +28,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -37,6 +36,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -74,14 +74,7 @@ import com.fitlogpro.app.ui.components.RestTimerDialog
 import com.fitlogpro.app.ui.components.RestTimerFloatingBar
 import com.fitlogpro.app.ui.components.SetTypeBadge
 import com.fitlogpro.app.ui.theme.AccentGreen
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.AccentTeal
-import com.fitlogpro.app.ui.theme.DarkBackground
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
-import com.fitlogpro.app.ui.theme.DarkTextTertiary
+import com.fitlogpro.app.ui.theme.AccentGold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -118,19 +111,14 @@ fun ActiveWorkoutScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(DarkBackground),
+                .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("No active workout in progress", color = DarkTextSecondary)
-                Spacer(modifier = Modifier.height(12.dp))
-                Button(
-                    onClick = onBack,
-                    colors = ButtonDefaults.buttonColors(containerColor = AccentOrange)
-                ) {
-                    Text("Go to Routines", color = Color.Black, fontWeight = FontWeight.Bold)
-                }
-            }
+            Text(
+                text = "No active workout",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 16.sp
+            )
         }
         return
     }
@@ -140,15 +128,20 @@ fun ActiveWorkoutScreen(
     val elapsedSeconds = activeSession.elapsedSeconds % 60
     val timerText = String.format("%02d:%02d", elapsedMinutes, elapsedSeconds)
 
+    val surfaceColor = MaterialTheme.colorScheme.surface
+    val textPrimary = MaterialTheme.colorScheme.onSurface
+    val textSecondary = MaterialTheme.colorScheme.onSurfaceVariant
+    val primaryColor = MaterialTheme.colorScheme.primary
+
     Scaffold(
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
                     Column {
                         Text(
                             text = activeSession.workoutName,
-                            color = DarkTextPrimary,
+                            color = textPrimary,
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Bold,
                             maxLines = 1
@@ -158,12 +151,12 @@ fun ActiveWorkoutScreen(
                                 modifier = Modifier
                                     .size(7.dp)
                                     .clip(CircleShape)
-                                    .background(if (activeSession.isPaused) Color(0xFFFFB300) else AccentGreen)
+                                    .background(if (activeSession.isPaused) AccentGold else AccentGreen)
                             )
                             Spacer(modifier = Modifier.width(5.dp))
                             Text(
                                 text = if (activeSession.isPaused) "Paused • $timerText" else timerText,
-                                color = if (activeSession.isPaused) Color(0xFFFFB300) else AccentGreen,
+                                color = if (activeSession.isPaused) AccentGold else AccentGreen,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
@@ -172,7 +165,11 @@ fun ActiveWorkoutScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Minimize", tint = DarkTextPrimary)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Minimize",
+                            tint = textPrimary
+                        )
                     }
                 },
                 actions = {
@@ -181,32 +178,39 @@ fun ActiveWorkoutScreen(
                         Icon(
                             imageVector = if (activeSession.isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
                             contentDescription = "Pause Workout",
-                            tint = DarkTextPrimary
+                            tint = textPrimary
                         )
                     }
 
                     // Finish Workout button
                     Button(
                         onClick = { viewModel.finishWorkout(onWorkoutFinished) },
-                        colors = ButtonDefaults.buttonColors(containerColor = AccentOrange),
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.padding(end = 8.dp)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = primaryColor,
+                            contentColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.padding(end = 6.dp)
                     ) {
-                        Text("Finish", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                        Text("Finish", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                     }
 
                     // Discard Menu
                     var showMenu by remember { mutableStateOf(false) }
                     IconButton(onClick = { showMenu = true }) {
-                        Icon(imageVector = Icons.Default.MoreVert, contentDescription = "More", tint = DarkTextPrimary)
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "More",
+                            tint = textPrimary
+                        )
                     }
                     DropdownMenu(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false },
-                        modifier = Modifier.background(DarkSurface)
+                        modifier = Modifier.background(surfaceColor)
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Discard Workout", color = Color(0xFFFF5252)) },
+                            text = { Text("Discard Workout", color = Color(0xFFEF4444)) },
                             onClick = {
                                 showMenu = false
                                 showDiscardDialog = true
@@ -214,7 +218,9 @@ fun ActiveWorkoutScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBackground)
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = surfaceColor
+                )
             )
         },
         bottomBar = {
@@ -255,16 +261,28 @@ fun ActiveWorkoutScreen(
             item {
                 Button(
                     onClick = { showAddExercisePicker = true },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF222731)),
-                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = surfaceColor,
+                        contentColor = primaryColor
+                    ),
+                    shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
-                        .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp))
                 ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = null, tint = AccentOrange, modifier = Modifier.size(18.dp))
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
+                        tint = primaryColor,
+                        modifier = Modifier.size(18.dp)
+                    )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Add Exercise", color = AccentOrange, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Text(
+                        text = "Add Exercise",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
                 }
             }
 
@@ -318,8 +336,8 @@ fun ActiveWorkoutScreen(
     if (showDiscardDialog) {
         AlertDialog(
             onDismissRequest = { showDiscardDialog = false },
-            title = { Text("Discard Workout?", color = DarkTextPrimary) },
-            text = { Text("Are you sure you want to discard this workout? All logged sets will be deleted.", color = DarkTextSecondary) },
+            title = { Text("Discard Workout?", color = textPrimary) },
+            text = { Text("Are you sure you want to discard this workout? All logged sets will be deleted.", color = textSecondary) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -327,15 +345,15 @@ fun ActiveWorkoutScreen(
                         viewModel.discardWorkout(onBack)
                     }
                 ) {
-                    Text("Discard", color = Color(0xFFFF5252), fontWeight = FontWeight.Bold)
+                    Text("Discard", color = Color(0xFFEF4444), fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDiscardDialog = false }) {
-                    Text("Keep Workout", color = DarkTextPrimary)
+                    Text("Keep Workout", color = textPrimary)
                 }
             },
-            containerColor = DarkSurface
+            containerColor = surfaceColor
         )
     }
 }
@@ -352,17 +370,18 @@ private fun ActiveExerciseCard(
     onOpenSetTypeChooser: (String) -> Unit
 ) {
     val isSuperset = exercise.supersetGroupId != null
+    val cardBg = MaterialTheme.colorScheme.surface
+    val cardBorder = if (isSuperset) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
+    val textPrimary = MaterialTheme.colorScheme.onSurface
+    val textSecondary = MaterialTheme.colorScheme.onSurfaceVariant
+    val primaryColor = MaterialTheme.colorScheme.primary
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .background(DarkSurface)
-            .border(
-                1.dp,
-                if (isSuperset) AccentTeal.copy(alpha = 0.5f) else DarkBorder,
-                RoundedCornerShape(14.dp)
-            )
+            .clip(RoundedCornerShape(16.dp))
+            .background(cardBg)
+            .border(1.dp, cardBorder, RoundedCornerShape(16.dp))
             .padding(14.dp)
     ) {
         Column {
@@ -376,7 +395,7 @@ private fun ActiveExerciseCard(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = exercise.exerciseName,
-                            color = DarkTextPrimary,
+                            color = textPrimary,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -385,12 +404,12 @@ private fun ActiveExerciseCard(
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(4.dp))
-                                    .background(AccentTeal.copy(alpha = 0.2f))
+                                    .background(primaryColor.copy(alpha = 0.12f))
                                     .padding(horizontal = 6.dp, vertical = 2.dp)
                             ) {
                                 Text(
                                     text = "SUPERSET",
-                                    color = AccentTeal,
+                                    color = primaryColor,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -399,13 +418,17 @@ private fun ActiveExerciseCard(
                     }
                     Text(
                         text = "${exercise.muscleGroup.displayName} • ${exercise.equipment.displayName}",
-                        color = DarkTextSecondary,
+                        color = textSecondary,
                         fontSize = 11.sp
                     )
                 }
 
                 IconButton(onClick = onRemoveExercise, modifier = Modifier.size(28.dp)) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove Exercise", tint = DarkTextTertiary)
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Remove Exercise",
+                        tint = textSecondary.copy(alpha = 0.6f)
+                    )
                 }
             }
 
@@ -418,11 +441,11 @@ private fun ActiveExerciseCard(
                     .padding(bottom = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("SET", color = DarkTextTertiary, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(36.dp), textAlign = TextAlign.Center)
-                Text("PREVIOUS", color = DarkTextTertiary, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.3f), textAlign = TextAlign.Center)
-                Text(weightUnit.symbol.uppercase(), color = DarkTextTertiary, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.2f), textAlign = TextAlign.Center)
-                Text("REPS", color = DarkTextTertiary, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.1f), textAlign = TextAlign.Center)
-                Text("✓", color = DarkTextTertiary, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(42.dp), textAlign = TextAlign.Center)
+                Text("SET", color = textSecondary, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(36.dp), textAlign = TextAlign.Center)
+                Text("PREVIOUS", color = textSecondary, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.3f), textAlign = TextAlign.Center)
+                Text(weightUnit.symbol.uppercase(), color = textSecondary, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.2f), textAlign = TextAlign.Center)
+                Text("REPS", color = textSecondary, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.1f), textAlign = TextAlign.Center)
+                Text("✓", color = textSecondary, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(42.dp), textAlign = TextAlign.Center)
             }
 
             // Sets List
@@ -449,11 +472,11 @@ private fun ActiveExerciseCard(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFF222731))
+                        .background(MaterialTheme.colorScheme.primaryContainer)
                         .clickable(onClick = onAddSet)
                         .padding(horizontal = 14.dp, vertical = 6.dp)
                 ) {
-                    Text("+ Add Set", color = AccentOrange, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Text("+ Add Set", color = primaryColor, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -470,7 +493,7 @@ private fun ActiveSetRow(
     onOpenTypeChooser: () -> Unit,
     onDeleteSet: () -> Unit
 ) {
-    val rowBackground = if (set.isCompleted) Color(0xFF142419) else Color.Transparent
+    val rowBackground = if (set.isCompleted) Color(0xFFECFDF5) else Color.Transparent
 
     Row(
         modifier = Modifier
@@ -491,7 +514,7 @@ private fun ActiveSetRow(
         // Previous Performance
         Text(
             text = set.previousPerformance ?: "—",
-            color = DarkTextSecondary,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.weight(1.3f)
@@ -523,7 +546,12 @@ private fun ActiveSetRow(
                 .width(42.dp)
                 .height(38.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(if (set.isCompleted) AccentGreen else Color(0xFF222731))
+                .background(if (set.isCompleted) Color(0xFF10B981) else MaterialTheme.colorScheme.surfaceVariant)
+                .border(
+                    1.dp,
+                    if (set.isCompleted) Color(0xFF059669) else MaterialTheme.colorScheme.outline,
+                    RoundedCornerShape(8.dp)
+                )
                 .clickable(onClick = onToggleComplete),
             contentAlignment = Alignment.Center
         ) {
@@ -531,11 +559,11 @@ private fun ActiveSetRow(
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = "Completed",
-                    tint = Color.Black,
+                    tint = Color.White,
                     modifier = Modifier.size(20.dp)
                 )
             } else {
-                Text("—", color = DarkTextTertiary, fontSize = 14.sp)
+                Text("—", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f), fontSize = 14.sp)
             }
         }
     }
@@ -559,7 +587,7 @@ private fun SetTypeSelectionDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Select Set Type", color = DarkTextPrimary, fontWeight = FontWeight.Bold) },
+        title = { Text("Select Set Type", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 SetType.entries.forEach { type ->
@@ -574,9 +602,9 @@ private fun SetTypeSelectionDialog(
                         SetTypeBadge(setNumber = 1, setType = type)
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
-                            Text(type.displayName, color = DarkTextPrimary, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                            Text(type.displayName, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                             val note = if (type == SetType.WARMUP) "Excluded from volume and PRs" else "Counts towards volume and PRs"
-                            Text(note, color = DarkTextSecondary, fontSize = 11.sp)
+                            Text(note, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                         }
                     }
                 }
@@ -585,10 +613,10 @@ private fun SetTypeSelectionDialog(
         confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = DarkTextPrimary)
+                Text("Cancel", color = MaterialTheme.colorScheme.onSurface)
             }
         },
-        containerColor = DarkSurface
+        containerColor = MaterialTheme.colorScheme.surface
     )
 }
 
@@ -601,17 +629,22 @@ private fun ActiveExercisePickerDialog(
     var query by remember { mutableStateOf("") }
     val filtered = exercises.filter { it.name.contains(query, ignoreCase = true) }
 
+    val surfaceColor = MaterialTheme.colorScheme.surface
+    val textPrimary = MaterialTheme.colorScheme.onSurface
+    val textSecondary = MaterialTheme.colorScheme.onSurfaceVariant
+    val primaryColor = MaterialTheme.colorScheme.primary
+
     androidx.compose.ui.window.Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = RoundedCornerShape(16.dp),
-            color = DarkSurface,
-            border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+            color = surfaceColor,
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(480.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text("Add Exercise", color = DarkTextPrimary, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text("Add Exercise", color = textPrimary, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = query,
@@ -619,10 +652,10 @@ private fun ActiveExercisePickerDialog(
                     placeholder = { Text("Search exercise...") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = AccentOrange,
-                        unfocusedBorderColor = DarkBorder,
-                        focusedTextColor = DarkTextPrimary,
-                        unfocusedTextColor = DarkTextPrimary
+                        focusedBorderColor = primaryColor,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                        focusedTextColor = textPrimary,
+                        unfocusedTextColor = textPrimary
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -636,8 +669,8 @@ private fun ActiveExercisePickerDialog(
                                 .padding(vertical = 10.dp)
                         ) {
                             Column {
-                                Text(ex.name, color = DarkTextPrimary, fontSize = 14.sp, fontWeight = FontWeight.Medium)
-                                Text("${ex.muscleGroup.displayName} • ${ex.equipment.displayName}", color = DarkTextSecondary, fontSize = 11.sp)
+                                Text(ex.name, color = textPrimary, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                                Text("${ex.muscleGroup.displayName} • ${ex.equipment.displayName}", color = textSecondary, fontSize = 11.sp)
                             }
                         }
                     }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,10 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
+import com.fitlogpro.app.ui.theme.PrimaryBlue
 
 @Composable
 fun StatCard(
@@ -33,14 +31,19 @@ fun StatCard(
     value: String,
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
-    iconTint: Color = Color(0xFFFF9100),
+    iconTint: Color = PrimaryBlue,
     subtitle: String? = null
 ) {
+    val cardBackground = MaterialTheme.colorScheme.surface
+    val cardBorder = MaterialTheme.colorScheme.outline
+    val textPrimary = MaterialTheme.colorScheme.onSurface
+    val textSecondary = MaterialTheme.colorScheme.onSurfaceVariant
+
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(DarkSurface)
-            .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(14.dp))
+            .background(cardBackground)
+            .border(1.dp, cardBorder, RoundedCornerShape(14.dp))
             .padding(14.dp)
     ) {
         Column {
@@ -56,7 +59,7 @@ fun StatCard(
                 }
                 Text(
                     text = title,
-                    color = DarkTextSecondary,
+                    color = textSecondary,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -64,7 +67,7 @@ fun StatCard(
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = value,
-                color = DarkTextPrimary,
+                color = textPrimary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -72,7 +75,7 @@ fun StatCard(
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = subtitle,
-                    color = DarkTextSecondary,
+                    color = textSecondary,
                     fontSize = 11.sp
                 )
             }

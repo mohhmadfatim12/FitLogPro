@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val isDarkTheme by container.userPreferencesManager.darkThemeFlow
-                .collectAsState(initial = true)
+                .collectAsState(initial = false)
 
             FitLogProTheme(darkTheme = isDarkTheme) {
                 Surface(

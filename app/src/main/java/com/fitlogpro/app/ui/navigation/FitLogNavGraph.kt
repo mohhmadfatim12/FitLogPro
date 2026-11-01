@@ -30,7 +30,6 @@ import com.fitlogpro.app.ui.measurements.BodyMeasurementScreen
 import com.fitlogpro.app.ui.measurements.BodyMeasurementViewModel
 import com.fitlogpro.app.ui.settings.SettingsScreen
 import com.fitlogpro.app.ui.settings.SettingsViewModel
-import com.fitlogpro.app.ui.theme.DarkBackground
 import com.fitlogpro.app.ui.workouts.EditRoutineScreen
 import com.fitlogpro.app.ui.workouts.RoutineDetailScreen
 import com.fitlogpro.app.ui.workouts.RoutineListScreen
@@ -84,7 +83,7 @@ fun FitLogNavGraph(
     val isFullscreenScreen = currentRoute == NavRoute.ActiveWorkout.route
 
     Scaffold(
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             if (!isFullscreenScreen) {
                 FitLogBottomBar(

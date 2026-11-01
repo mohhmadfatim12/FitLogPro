@@ -58,13 +58,6 @@ import com.fitlogpro.app.data.local.entity.ExerciseEntity
 import com.fitlogpro.app.data.local.entity.RoutineExerciseCrossRef
 import com.fitlogpro.app.data.repository.ExerciseRepository
 import com.fitlogpro.app.ui.components.GymNumberField
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.AccentTeal
-import com.fitlogpro.app.ui.theme.DarkBackground
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
 
 data class EditableRoutineItem(
     val exerciseId: Long,
@@ -119,13 +112,13 @@ fun EditRoutineScreen(
     }
 
     Scaffold(
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text(if (routineId == 0L) "New Routine" else "Edit Routine", color = DarkTextPrimary, fontSize = 18.sp, fontWeight = FontWeight.Bold) },
+                title = { Text(if (routineId == 0L) "New Routine" else "Edit Routine", color = MaterialTheme.colorScheme.onSurface, fontSize = 18.sp, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = DarkTextPrimary)
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurface)
                     }
                 },
                 actions = {
@@ -149,10 +142,10 @@ fun EditRoutineScreen(
                         },
                         enabled = name.isNotBlank()
                     ) {
-                        Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint = if (name.isNotBlank()) AccentOrange else Color.Gray)
+                        Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint = if (name.isNotBlank()) MaterialTheme.colorScheme.primary else Color.Gray)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBackground)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
             )
         }
     ) { innerPadding ->
@@ -170,10 +163,10 @@ fun EditRoutineScreen(
                     label = { Text("Routine Name") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = AccentOrange,
-                        unfocusedBorderColor = DarkBorder,
-                        focusedTextColor = DarkTextPrimary,
-                        unfocusedTextColor = DarkTextPrimary
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -185,10 +178,10 @@ fun EditRoutineScreen(
                     onValueChange = { description = it },
                     label = { Text("Description (Optional)") },
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = AccentOrange,
-                        unfocusedBorderColor = DarkBorder,
-                        focusedTextColor = DarkTextPrimary,
-                        unfocusedTextColor = DarkTextPrimary
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -202,18 +195,21 @@ fun EditRoutineScreen(
                 ) {
                     Text(
                         text = "Exercises (${editableItems.size})",
-                        color = DarkTextPrimary,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Button(
                         onClick = { showExercisePicker = true },
-                        colors = ButtonDefaults.buttonColors(containerColor = AccentOrange),
-                        shape = RoundedCornerShape(8.dp)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(10.dp)
                     ) {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = null, tint = Color.Black, modifier = Modifier.size(16.dp))
+                        Icon(imageVector = Icons.Default.Add, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Add Exercise", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        Text("Add Exercise", fontWeight = FontWeight.Bold, fontSize = 12.sp)
                     }
                 }
             }
@@ -281,9 +277,9 @@ private fun EditableExerciseCard(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(DarkSurface)
-            .border(1.dp, if (isSuperset) AccentTeal else DarkBorder, RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(14.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, if (isSuperset) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp))
             .padding(14.dp)
     ) {
         Column {
@@ -294,7 +290,7 @@ private fun EditableExerciseCard(
             ) {
                 Text(
                     text = "${index + 1}. ${item.exerciseName}",
-                    color = DarkTextPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
@@ -302,16 +298,16 @@ private fun EditableExerciseCard(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = onMoveUp, enabled = index > 0, modifier = Modifier.size(30.dp)) {
-                        Icon(imageVector = Icons.Default.ArrowUpward, contentDescription = "Move Up", tint = if (index > 0) DarkTextPrimary else Color.DarkGray)
+                        Icon(imageVector = Icons.Default.ArrowUpward, contentDescription = "Move Up", tint = if (index > 0) MaterialTheme.colorScheme.onSurface else Color.LightGray)
                     }
                     IconButton(onClick = onMoveDown, enabled = index < total - 1, modifier = Modifier.size(30.dp)) {
-                        Icon(imageVector = Icons.Default.ArrowDownward, contentDescription = "Move Down", tint = if (index < total - 1) DarkTextPrimary else Color.DarkGray)
+                        Icon(imageVector = Icons.Default.ArrowDownward, contentDescription = "Move Down", tint = if (index < total - 1) MaterialTheme.colorScheme.onSurface else Color.LightGray)
                     }
                     IconButton(onClick = onToggleSuperset, modifier = Modifier.size(30.dp)) {
-                        Icon(imageVector = Icons.Default.Link, contentDescription = "Toggle Superset", tint = if (isSuperset) AccentTeal else DarkTextSecondary)
+                        Icon(imageVector = Icons.Default.Link, contentDescription = "Toggle Superset", tint = if (isSuperset) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     IconButton(onClick = onRemove, modifier = Modifier.size(30.dp)) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove", tint = Color(0xFFFF5252))
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove", tint = Color(0xFFEF4444))
                     }
                 }
             }
@@ -323,7 +319,7 @@ private fun EditableExerciseCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Sets", color = DarkTextSecondary, fontSize = 11.sp)
+                    Text("Sets", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                     GymNumberField(
                         value = if (item.targetSets > 0) item.targetSets.toString() else "",
                         onValueChange = { item.targetSets = it.toIntOrNull() ?: 1 },
@@ -332,7 +328,7 @@ private fun EditableExerciseCard(
                 }
 
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Reps", color = DarkTextSecondary, fontSize = 11.sp)
+                    Text("Reps", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                     GymNumberField(
                         value = if (item.targetReps > 0) item.targetReps.toString() else "",
                         onValueChange = { item.targetReps = it.toIntOrNull() ?: 1 },
@@ -341,7 +337,7 @@ private fun EditableExerciseCard(
                 }
 
                 Column(modifier = Modifier.weight(1.2f)) {
-                    Text("Weight (kg)", color = DarkTextSecondary, fontSize = 11.sp)
+                    Text("Weight (kg)", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                     GymNumberField(
                         value = if (item.targetWeightKg > 0) item.targetWeightKg.toString() else "",
                         onValueChange = { item.targetWeightKg = it.toDoubleOrNull() ?: 0.0 },
@@ -365,14 +361,14 @@ private fun ExercisePickerDialog(
     androidx.compose.ui.window.Dialog(onDismissRequest = onDismiss) {
         androidx.compose.material3.Surface(
             shape = RoundedCornerShape(16.dp),
-            color = DarkSurface,
-            border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+            color = MaterialTheme.colorScheme.surface,
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(480.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text("Select Exercise", color = DarkTextPrimary, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text("Select Exercise", color = MaterialTheme.colorScheme.onSurface, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = searchQuery,
@@ -380,10 +376,10 @@ private fun ExercisePickerDialog(
                     placeholder = { Text("Search exercise...") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = AccentOrange,
-                        unfocusedBorderColor = DarkBorder,
-                        focusedTextColor = DarkTextPrimary,
-                        unfocusedTextColor = DarkTextPrimary
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -397,8 +393,8 @@ private fun ExercisePickerDialog(
                                 .padding(vertical = 10.dp)
                         ) {
                             Column {
-                                Text(ex.name, color = DarkTextPrimary, fontSize = 14.sp, fontWeight = FontWeight.Medium)
-                                Text("${ex.muscleGroup.displayName} • ${ex.equipment.displayName}", color = DarkTextSecondary, fontSize = 11.sp)
+                                Text(ex.name, color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                                Text("${ex.muscleGroup.displayName} • ${ex.equipment.displayName}", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                             }
                         }
                     }

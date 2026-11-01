@@ -47,12 +47,6 @@ import androidx.compose.ui.unit.sp
 import com.fitlogpro.app.domain.model.Equipment
 import com.fitlogpro.app.domain.model.ExerciseType
 import com.fitlogpro.app.domain.model.MuscleGroup
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.DarkBackground
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,13 +67,13 @@ fun AddEditExerciseScreen(
     var showTypeMenu by remember { mutableStateOf(false) }
 
     Scaffold(
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("New Custom Exercise", color = DarkTextPrimary, fontSize = 18.sp, fontWeight = FontWeight.Bold) },
+                title = { Text("New Custom Exercise", color = MaterialTheme.colorScheme.onBackground, fontSize = 18.sp, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = DarkTextPrimary)
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onBackground)
                     }
                 },
                 actions = {
@@ -99,10 +93,10 @@ fun AddEditExerciseScreen(
                         },
                         enabled = name.isNotBlank()
                     ) {
-                        Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint = if (name.isNotBlank()) AccentOrange else Color.Gray)
+                        Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint = if (name.isNotBlank()) MaterialTheme.colorScheme.primary else Color.Gray)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBackground)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         }
     ) { innerPadding ->
@@ -120,10 +114,10 @@ fun AddEditExerciseScreen(
                     label = { Text("Exercise Name") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = AccentOrange,
-                        unfocusedBorderColor = DarkBorder,
-                        focusedTextColor = DarkTextPrimary,
-                        unfocusedTextColor = DarkTextPrimary
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -132,28 +126,28 @@ fun AddEditExerciseScreen(
             // Muscle Group Picker Dropdown
             item {
                 Column {
-                    Text("Target Muscle Group", color = DarkTextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Target Muscle Group", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                     Spacer(modifier = Modifier.height(4.dp))
                     Box {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(DarkSurface)
-                                .border(1.dp, DarkBorder, RoundedCornerShape(8.dp))
+                                .background(MaterialTheme.colorScheme.surface)
+                                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
                                 .clickable { showMuscleMenu = true }
                                 .padding(14.dp)
                         ) {
-                            Text(selectedMuscle.displayName, color = DarkTextPrimary, fontSize = 14.sp)
+                            Text(selectedMuscle.displayName, color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp)
                         }
                         DropdownMenu(
                             expanded = showMuscleMenu,
                             onDismissRequest = { showMuscleMenu = false },
-                            modifier = Modifier.background(DarkSurface)
+                            modifier = Modifier.background(MaterialTheme.colorScheme.surface)
                         ) {
                             MuscleGroup.entries.forEach { muscle ->
                                 DropdownMenuItem(
-                                    text = { Text(muscle.displayName, color = DarkTextPrimary) },
+                                    text = { Text(muscle.displayName, color = MaterialTheme.colorScheme.onSurface) },
                                     onClick = {
                                         selectedMuscle = muscle
                                         showMuscleMenu = false
@@ -168,28 +162,28 @@ fun AddEditExerciseScreen(
             // Equipment Picker Dropdown
             item {
                 Column {
-                    Text("Equipment", color = DarkTextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Equipment", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                     Spacer(modifier = Modifier.height(4.dp))
                     Box {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(DarkSurface)
-                                .border(1.dp, DarkBorder, RoundedCornerShape(8.dp))
+                                .background(MaterialTheme.colorScheme.surface)
+                                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
                                 .clickable { showEquipMenu = true }
                                 .padding(14.dp)
                         ) {
-                            Text(selectedEquipment.displayName, color = DarkTextPrimary, fontSize = 14.sp)
+                            Text(selectedEquipment.displayName, color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp)
                         }
                         DropdownMenu(
                             expanded = showEquipMenu,
                             onDismissRequest = { showEquipMenu = false },
-                            modifier = Modifier.background(DarkSurface)
+                            modifier = Modifier.background(MaterialTheme.colorScheme.surface)
                         ) {
                             Equipment.entries.forEach { equip ->
                                 DropdownMenuItem(
-                                    text = { Text(equip.displayName, color = DarkTextPrimary) },
+                                    text = { Text(equip.displayName, color = MaterialTheme.colorScheme.onSurface) },
                                     onClick = {
                                         selectedEquipment = equip
                                         showEquipMenu = false
@@ -204,28 +198,28 @@ fun AddEditExerciseScreen(
             // Exercise Modality Type
             item {
                 Column {
-                    Text("Modality / Exercise Type", color = DarkTextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Modality / Exercise Type", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                     Spacer(modifier = Modifier.height(4.dp))
                     Box {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(DarkSurface)
-                                .border(1.dp, DarkBorder, RoundedCornerShape(8.dp))
+                                .background(MaterialTheme.colorScheme.surface)
+                                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
                                 .clickable { showTypeMenu = true }
                                 .padding(14.dp)
                         ) {
-                            Text(selectedType.displayName, color = DarkTextPrimary, fontSize = 14.sp)
+                            Text(selectedType.displayName, color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp)
                         }
                         DropdownMenu(
                             expanded = showTypeMenu,
                             onDismissRequest = { showTypeMenu = false },
-                            modifier = Modifier.background(DarkSurface)
+                            modifier = Modifier.background(MaterialTheme.colorScheme.surface)
                         ) {
                             ExerciseType.entries.forEach { type ->
                                 DropdownMenuItem(
-                                    text = { Text(type.displayName, color = DarkTextPrimary) },
+                                    text = { Text(type.displayName, color = MaterialTheme.colorScheme.onSurface) },
                                     onClick = {
                                         selectedType = type
                                         showTypeMenu = false
@@ -240,7 +234,7 @@ fun AddEditExerciseScreen(
             // Default Rest Timer Selector
             item {
                 Column {
-                    Text("Default Rest Timer", color = DarkTextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Default Rest Timer", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                     Spacer(modifier = Modifier.height(6.dp))
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         listOf(45, 60, 90, 120, 180).forEach { sec ->
@@ -249,15 +243,15 @@ fun AddEditExerciseScreen(
                                 modifier = Modifier
                                     .weight(1f)
                                     .clip(RoundedCornerShape(8.dp))
-                                    .background(if (isSel) AccentOrange else Color(0xFF222731))
-                                    .border(1.dp, if (isSel) AccentOrange else DarkBorder, RoundedCornerShape(8.dp))
+                                    .background(if (isSel) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
+                                    .border(1.dp, if (isSel) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
                                     .clickable { restSeconds = sec }
                                     .padding(vertical = 10.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = "${sec}s",
-                                    color = if (isSel) Color.Black else DarkTextPrimary,
+                                    color = if (isSel) Color.White else MaterialTheme.colorScheme.onSurface,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 12.sp
                                 )
@@ -275,10 +269,10 @@ fun AddEditExerciseScreen(
                     label = { Text("Instructions / Coaching Cues") },
                     minLines = 3,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = AccentOrange,
-                        unfocusedBorderColor = DarkBorder,
-                        focusedTextColor = DarkTextPrimary,
-                        unfocusedTextColor = DarkTextPrimary
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -301,13 +295,13 @@ fun AddEditExerciseScreen(
                         }
                     },
                     enabled = name.isNotBlank(),
-                    colors = ButtonDefaults.buttonColors(containerColor = AccentOrange),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Text("Create Exercise", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                    Text("Create Exercise", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 }
             }
         }

@@ -24,11 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitlogpro.app.domain.model.MuscleGroup
 import com.fitlogpro.app.domain.model.MuscleGroupDistribution
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
-import com.fitlogpro.app.ui.theme.DarkTextTertiary
+
 
 private val MuscleGroupColors = listOf(
     Color(0xFFFF6D00), // Chest - Orange
@@ -49,18 +45,23 @@ fun MuscleDistributionChart(
     distributions: List<MuscleGroupDistribution>,
     modifier: Modifier = Modifier
 ) {
+    val surfaceColor = androidx.compose.material3.MaterialTheme.colorScheme.surface
+    val outlineColor = androidx.compose.material3.MaterialTheme.colorScheme.outline
+    val textPrimary = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
+    val textMuted = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+
     Box(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(DarkSurface)
-            .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+            .background(surfaceColor)
+            .border(1.dp, outlineColor, RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
         if (distributions.isEmpty()) {
             Text(
                 text = "No muscle distribution data available.\nLog workouts to view muscle group analytics.",
-                color = DarkTextTertiary,
+                color = textMuted,
                 fontSize = 13.sp,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                 modifier = Modifier
@@ -73,7 +74,7 @@ fun MuscleDistributionChart(
         Column {
             Text(
                 text = "Muscle Group Distribution",
-                color = DarkTextPrimary,
+                color = textPrimary,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -119,14 +120,14 @@ fun MuscleDistributionChart(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = dist.muscleGroup.displayName,
-                            color = DarkTextPrimary,
+                            color = textPrimary,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.weight(1f)
                         )
                         Text(
                             text = "${dist.totalSets} sets (${String.format("%.1f", dist.percentage)}%)",
-                            color = DarkTextSecondary,
+                            color = textMuted,
                             fontSize = 12.sp
                         )
                     }

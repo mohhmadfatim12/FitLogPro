@@ -2,10 +2,8 @@ package com.fitlogpro.app.ui.history
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,6 +11,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -30,10 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.DarkBackground
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,14 +44,17 @@ fun EditWorkoutScreen(
     var name by remember(workout) { mutableStateOf(workout?.name ?: "") }
     var notes by remember(workout) { mutableStateOf(workout?.notes ?: "") }
 
+    val textPrimary = MaterialTheme.colorScheme.onSurface
+    val primaryColor = MaterialTheme.colorScheme.primary
+
     Scaffold(
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("Edit Workout", color = DarkTextPrimary, fontSize = 18.sp, fontWeight = FontWeight.Bold) },
+                title = { Text("Edit Workout", color = textPrimary, fontSize = 18.sp, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = DarkTextPrimary)
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = textPrimary)
                     }
                 },
                 actions = {
@@ -69,10 +67,10 @@ fun EditWorkoutScreen(
                         },
                         enabled = name.isNotBlank()
                     ) {
-                        Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint = if (name.isNotBlank()) AccentOrange else Color.Gray)
+                        Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint = if (name.isNotBlank()) primaryColor else Color.Gray)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBackground)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
             )
         }
     ) { innerPadding ->
@@ -89,10 +87,10 @@ fun EditWorkoutScreen(
                 label = { Text("Workout Name") },
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = AccentOrange,
-                    unfocusedBorderColor = DarkBorder,
-                    focusedTextColor = DarkTextPrimary,
-                    unfocusedTextColor = DarkTextPrimary
+                    focusedBorderColor = primaryColor,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedTextColor = textPrimary,
+                    unfocusedTextColor = textPrimary
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -103,10 +101,10 @@ fun EditWorkoutScreen(
                 label = { Text("Workout Notes") },
                 minLines = 4,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = AccentOrange,
-                    unfocusedBorderColor = DarkBorder,
-                    focusedTextColor = DarkTextPrimary,
-                    unfocusedTextColor = DarkTextPrimary
+                    focusedBorderColor = primaryColor,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedTextColor = textPrimary,
+                    unfocusedTextColor = textPrimary
                 ),
                 modifier = Modifier.fillMaxWidth()
             )

@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,12 +36,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitlogpro.app.domain.timer.RestTimerSnapshot
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.AccentTeal
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
 
 @Composable
 fun RestTimerFloatingBar(
@@ -64,34 +59,40 @@ fun RestTimerFloatingBar(
         val seconds = snapshot.remainingSeconds % 60
         val timeFormatted = String.format("%02d:%02d", minutes, seconds)
 
+        val cardBg = MaterialTheme.colorScheme.surface
+        val cardBorder = MaterialTheme.colorScheme.outline
+        val primaryColor = MaterialTheme.colorScheme.primary
+        val textPrimary = MaterialTheme.colorScheme.onSurface
+        val textSecondary = MaterialTheme.colorScheme.onSurfaceVariant
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 6.dp)
-                .clip(RoundedCornerShape(14.dp))
-                .background(DarkSurface)
-                .border(1.dp, AccentOrange.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
+                .clip(RoundedCornerShape(16.dp))
+                .background(cardBg)
+                .border(1.dp, cardBorder, RoundedCornerShape(16.dp))
                 .clickable(onClick = onOpenModal)
         ) {
             Column {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                        .padding(horizontal = 14.dp, vertical = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(34.dp)
+                            .size(36.dp)
                             .clip(CircleShape)
-                            .background(AccentOrange.copy(alpha = 0.15f)),
+                            .background(MaterialTheme.colorScheme.primaryContainer),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Timer,
                             contentDescription = null,
-                            tint = AccentOrange,
-                            modifier = Modifier.size(18.dp)
+                            tint = primaryColor,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
 
@@ -100,13 +101,13 @@ fun RestTimerFloatingBar(
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = if (snapshot.isPaused) "Timer Paused" else (snapshot.exerciseName?.let { "Rest: $it" } ?: "Resting..."),
-                            color = DarkTextSecondary,
+                            color = textSecondary,
                             fontSize = 11.sp,
                             maxLines = 1
                         )
                         Text(
                             text = timeFormatted,
-                            color = if (snapshot.remainingSeconds <= 10) Color(0xFFFF5252) else DarkTextPrimary,
+                            color = if (snapshot.remainingSeconds <= 10) Color(0xFFEF4444) else textPrimary,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -115,14 +116,14 @@ fun RestTimerFloatingBar(
                     // +30s Button
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(Color(0xFF222731))
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
                             .clickable { onAddTime(30) }
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .padding(horizontal = 10.dp, vertical = 6.dp)
                     ) {
                         Text(
                             text = "+30s",
-                            color = AccentTeal,
+                            color = primaryColor,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -138,7 +139,7 @@ fun RestTimerFloatingBar(
                         Icon(
                             imageVector = if (snapshot.isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
                             contentDescription = "Toggle Rest Timer",
-                            tint = DarkTextPrimary,
+                            tint = textPrimary,
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -151,7 +152,7 @@ fun RestTimerFloatingBar(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Skip Timer",
-                            tint = DarkTextSecondary,
+                            tint = textSecondary,
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -163,8 +164,8 @@ fun RestTimerFloatingBar(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(3.dp),
-                    color = AccentOrange,
-                    trackColor = DarkBorder,
+                    color = primaryColor,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
             }
         }

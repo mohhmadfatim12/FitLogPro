@@ -23,11 +23,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
-import com.fitlogpro.app.ui.theme.DarkTextTertiary
 import kotlin.math.max
 
 data class ChartDataPoint(
@@ -42,13 +37,17 @@ fun CustomLineChart(
     lineColor: Color = AccentOrange,
     modifier: Modifier = Modifier
 ) {
+    val surfaceColor = androidx.compose.material3.MaterialTheme.colorScheme.surface
+    val outlineColor = androidx.compose.material3.MaterialTheme.colorScheme.outline
+    val textMuted = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(DarkSurface)
-            .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+            .background(surfaceColor)
+            .border(1.dp, outlineColor, RoundedCornerShape(12.dp))
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -56,7 +55,7 @@ fun CustomLineChart(
         if (points.isEmpty()) {
             Text(
                 text = "No history recorded yet.\nComplete workouts to view progress chart.",
-                color = DarkTextTertiary,
+                color = textMuted,
                 fontSize = 13.sp,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
@@ -84,7 +83,7 @@ fun CustomLineChart(
             for (i in 0..2) {
                 val gridY = topPadding + (graphHeight / 2f) * i
                 drawLine(
-                    color = Color(0xFF262C38),
+                    color = outlineColor,
                     start = Offset(0f, gridY),
                     end = Offset(width, gridY),
                     strokeWidth = 1f
@@ -147,7 +146,7 @@ fun CustomLineChart(
                     center = offset
                 )
                 drawCircle(
-                    color = DarkSurface,
+                    color = surfaceColor,
                     radius = 2.5.dp.toPx(),
                     center = offset
                 )

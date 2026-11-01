@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,9 +17,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitlogpro.app.domain.model.SetType
-import com.fitlogpro.app.ui.theme.SetColorDropSet
-import com.fitlogpro.app.ui.theme.SetColorFailure
-import com.fitlogpro.app.ui.theme.SetColorWarmup
 
 @Composable
 fun SetTypeBadge(
@@ -30,27 +28,27 @@ fun SetTypeBadge(
     val (badgeText, bgColor, textColor, borderColor) = when (setType) {
         SetType.NORMAL -> Quad(
             setNumber.toString(),
-            Color(0xFF222731),
-            Color(0xFFF0F2F5),
-            Color(0xFF333B4A)
+            MaterialTheme.colorScheme.surfaceVariant,
+            MaterialTheme.colorScheme.onSurface,
+            MaterialTheme.colorScheme.outline
         )
         SetType.WARMUP -> Quad(
             "W",
-            SetColorWarmup.copy(alpha = 0.2f),
-            SetColorWarmup,
-            SetColorWarmup
+            Color(0xFFFEF3C7),
+            Color(0xFFD97706),
+            Color(0xFFFDE68A)
         )
         SetType.DROP_SET -> Quad(
             "D",
-            SetColorDropSet.copy(alpha = 0.2f),
-            SetColorDropSet,
-            SetColorDropSet
+            Color(0xFFEDE9FE),
+            Color(0xFF7C3AED),
+            Color(0xFFDDD6FE)
         )
         SetType.FAILURE -> Quad(
             "F",
-            SetColorFailure.copy(alpha = 0.2f),
-            SetColorFailure,
-            SetColorFailure
+            Color(0xFFFEE2E2),
+            Color(0xFFDC2626),
+            Color(0xFFFECACA)
         )
     }
 

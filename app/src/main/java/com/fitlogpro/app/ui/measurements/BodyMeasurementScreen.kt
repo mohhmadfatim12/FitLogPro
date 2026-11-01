@@ -47,13 +47,6 @@ import com.fitlogpro.app.domain.model.MeasurementType
 import com.fitlogpro.app.domain.model.WeightUnit
 import com.fitlogpro.app.ui.components.CustomLineChart
 import com.fitlogpro.app.ui.components.StatCard
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.DarkBackground
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
-import com.fitlogpro.app.ui.theme.DarkTextTertiary
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -84,12 +77,12 @@ fun BodyMeasurementScreen(
     } ?: "—"
 
     Scaffold(
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddDialog = true },
-                containerColor = AccentOrange,
-                contentColor = Color.Black
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = Color.White
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Log Measurement")
             }
@@ -103,7 +96,7 @@ fun BodyMeasurementScreen(
             // Header
             Text(
                 text = "Body Measurements",
-                color = DarkTextPrimary,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
@@ -120,15 +113,15 @@ fun BodyMeasurementScreen(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
-                            .background(if (isSel) AccentOrange else Color(0xFF222731))
-                            .border(1.dp, if (isSel) AccentOrange else DarkBorder, RoundedCornerShape(8.dp))
+                            .background(if (isSel) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
+                            .border(1.dp, if (isSel) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
                             .clickable { viewModel.selectMeasurementType(type) }
                             .padding(horizontal = 12.dp, vertical = 6.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = type.displayName,
-                            color = if (isSel) Color.Black else DarkTextPrimary,
+                            color = if (isSel) Color.White else MaterialTheme.colorScheme.onSurface,
                             fontSize = 12.sp,
                             fontWeight = if (isSel) FontWeight.Bold else FontWeight.Medium
                         )
@@ -149,7 +142,7 @@ fun BodyMeasurementScreen(
                         title = "Latest ${selectedType.displayName}",
                         value = latestDisplay,
                         icon = Icons.Default.MonitorWeight,
-                        iconTint = AccentOrange,
+                        iconTint = MaterialTheme.colorScheme.primary,
                         subtitle = latest?.let { "Recorded on ${SimpleDateFormat("MMM d, yyyy", Locale.US).format(Date(it.recordedEpochMs))}" }
                     )
                 }
@@ -159,7 +152,7 @@ fun BodyMeasurementScreen(
                     Column {
                         Text(
                             text = "${selectedType.displayName} Progress Trend",
-                            color = DarkTextPrimary,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -175,7 +168,7 @@ fun BodyMeasurementScreen(
                 item {
                     Text(
                         text = "History Logs (${measurements.size})",
-                        color = DarkTextPrimary,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -227,9 +220,9 @@ private fun MeasurementRow(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(DarkSurface)
-            .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(14.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp))
             .padding(14.dp)
     ) {
         Row(
@@ -239,18 +232,18 @@ private fun MeasurementRow(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "${String.format("%.1f", displayVal)} $unitLabel",
-                    color = DarkTextPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = dateFormat.format(Date(item.recordedEpochMs)),
-                    color = DarkTextSecondary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 11.sp
                 )
                 if (item.notes.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(2.dp))
-                    Text(text = item.notes, color = DarkTextTertiary, fontSize = 11.sp)
+                    Text(text = item.notes, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f), fontSize = 11.sp)
                 }
             }
 
@@ -258,7 +251,7 @@ private fun MeasurementRow(
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete",
-                    tint = DarkTextTertiary
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

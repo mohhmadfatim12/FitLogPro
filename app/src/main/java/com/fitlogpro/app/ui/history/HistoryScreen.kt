@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,18 +48,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fitlogpro.app.data.local.entity.WorkoutWithDetails
-import com.fitlogpro.app.domain.model.CalendarWorkoutDay
+import com.fitlogpro.app.data.local.relation.WorkoutWithDetails
 import com.fitlogpro.app.ui.components.EmptyStateView
 import com.fitlogpro.app.ui.theme.AccentGold
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.AccentTeal
-import com.fitlogpro.app.ui.theme.DarkBackground
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
-import com.fitlogpro.app.ui.theme.DarkTextTertiary
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -70,17 +62,16 @@ fun HistoryScreen(
     viewModel: HistoryViewModel,
     onWorkoutClick: (Long) -> Unit
 ) {
-    var selectedTab by remember { mutableIntStateOf(0) } // 0 = List, 1 = Calendar
-    val workouts by viewModel.workoutsWithDetails.collectAsState()
-
+    val workouts by viewModel.workouts.collectAsState()
+    val calendarDays by viewModel.calendarDays.collectAsState()
     val selectedYear by viewModel.selectedYear.collectAsState()
     val selectedMonth by viewModel.selectedMonth.collectAsState()
-    val calendarDays by viewModel.calendarDays.collectAsState()
 
+    var selectedTab by remember { mutableIntStateOf(0) } // 0 = List, 1 = Calendar
     var selectedCalendarDay by remember { mutableStateOf<CalendarWorkoutDay?>(null) }
 
     Scaffold(
-        containerColor = DarkBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -92,8 +83,8 @@ fun HistoryScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(Color(0xFF222731))
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -163,10 +154,13 @@ private fun TabButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val bg = if (isSelected) MaterialTheme.colorScheme.surface else Color.Transparent
+    val contentColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(if (isSelected) DarkSurface else Color.Transparent)
+            .background(bg)
             .clickable(onClick = onClick)
             .padding(vertical = 8.dp),
         contentAlignment = Alignment.Center
@@ -175,13 +169,13 @@ private fun TabButton(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = if (isSelected) AccentOrange else DarkTextSecondary,
+                tint = contentColor,
                 modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(
                 text = label,
-                color = if (isSelected) DarkTextPrimary else DarkTextSecondary,
+                color = contentColor,
                 fontSize = 13.sp,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
             )
@@ -200,12 +194,18 @@ private fun WorkoutHistoryCard(
     val durationMin = workout.durationSeconds / 60
     val prCount = item.exercises.flatMap { it.sets }.count { it.isPr }
 
+    val cardBg = MaterialTheme.colorScheme.surface
+    val cardBorder = MaterialTheme.colorScheme.outline
+    val textPrimary = MaterialTheme.colorScheme.onSurface
+    val textSecondary = MaterialTheme.colorScheme.onSurfaceVariant
+    val primaryColor = MaterialTheme.colorScheme.primary
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .background(DarkSurface)
-            .border(1.dp, DarkBorder, RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(16.dp))
+            .background(cardBg)
+            .border(1.dp, cardBorder, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
             .padding(16.dp)
     ) {
@@ -217,7 +217,7 @@ private fun WorkoutHistoryCard(
             ) {
                 Text(
                     text = workout.name,
-                    color = DarkTextPrimary,
+                    color = textPrimary,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
@@ -226,21 +226,21 @@ private fun WorkoutHistoryCard(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(6.dp))
-                            .background(Color(0xFF2E240D))
-                            .border(1.dp, AccentGold, RoundedCornerShape(6.dp))
+                            .background(Color(0xFFFEF3C7))
+                            .border(1.dp, Color(0xFFF59E0B), RoundedCornerShape(6.dp))
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(imageVector = Icons.Default.EmojiEvents, contentDescription = null, tint = AccentGold, modifier = Modifier.size(12.dp))
+                            Icon(imageVector = Icons.Default.EmojiEvents, contentDescription = null, tint = Color(0xFFD97706), modifier = Modifier.size(12.dp))
                             Spacer(modifier = Modifier.width(3.dp))
-                            Text("$prCount PRs", color = AccentGold, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            Text("$prCount PRs", color = Color(0xFFB45309), fontSize = 10.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = dateText, color = DarkTextSecondary, fontSize = 12.sp)
+            Text(text = dateText, color = textSecondary, fontSize = 12.sp)
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -248,27 +248,27 @@ private fun WorkoutHistoryCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFF222731))
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(horizontal = 12.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Default.Timer, contentDescription = null, tint = DarkTextSecondary, modifier = Modifier.size(14.dp))
+                    Icon(imageVector = Icons.Default.Timer, contentDescription = null, tint = textSecondary, modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("${durationMin}m", color = DarkTextPrimary, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                    Text("${durationMin}m", color = textPrimary, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
                 }
 
                 Text(
                     text = "${String.format("%,.0f", workout.totalVolumeKg)} kg volume",
-                    color = AccentOrange,
+                    color = primaryColor,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold
                 )
 
                 Text(
                     text = "${item.exercises.size} exercises",
-                    color = DarkTextSecondary,
+                    color = textSecondary,
                     fontSize = 12.sp
                 )
             }
@@ -280,7 +280,7 @@ private fun WorkoutHistoryCard(
                 val suffix = if (item.exercises.size > 3) " +${item.exercises.size - 3} more" else ""
                 Text(
                     text = exerciseNames + suffix,
-                    color = DarkTextTertiary,
+                    color = textSecondary.copy(alpha = 0.8f),
                     fontSize = 11.sp,
                     maxLines = 1
                 )
@@ -302,6 +302,9 @@ private fun CalendarViewSection(
     onWorkoutClick: (Long) -> Unit
 ) {
     val monthName = DateFormatSymbols.getInstance(Locale.US).months[month]
+    val textPrimary = MaterialTheme.colorScheme.onSurface
+    val textSecondary = MaterialTheme.colorScheme.onSurfaceVariant
+    val primaryColor = MaterialTheme.colorScheme.primary
 
     Column(modifier = Modifier.fillMaxSize()) {
         // Month Selector Header
@@ -313,16 +316,16 @@ private fun CalendarViewSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onPrevMonth) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Month", tint = DarkTextPrimary)
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Month", tint = textPrimary)
             }
             Text(
                 text = "$monthName $year",
-                color = DarkTextPrimary,
+                color = textPrimary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
             IconButton(onClick = onNextMonth) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Month", tint = DarkTextPrimary)
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Month", tint = textPrimary)
             }
         }
 
@@ -334,7 +337,7 @@ private fun CalendarViewSection(
             weekDays.forEach { dayName ->
                 Text(
                     text = dayName,
-                    color = DarkTextTertiary,
+                    color = textSecondary,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -372,16 +375,16 @@ private fun CalendarViewSection(
                         .clip(CircleShape)
                         .background(
                             when {
-                                isSelected -> AccentOrange
-                                day.hasWorkout -> Color(0xFF2C2210)
+                                isSelected -> primaryColor
+                                day.hasWorkout -> MaterialTheme.colorScheme.primaryContainer
                                 else -> Color.Transparent
                             }
                         )
                         .border(
                             1.dp,
                             when {
-                                isSelected -> AccentOrange
-                                day.hasWorkout -> AccentOrange.copy(alpha = 0.6f)
+                                isSelected -> primaryColor
+                                day.hasWorkout -> primaryColor.copy(alpha = 0.5f)
                                 else -> Color.Transparent
                             },
                             CircleShape
@@ -393,9 +396,9 @@ private fun CalendarViewSection(
                         Text(
                             text = day.dayOfMonth.toString(),
                             color = when {
-                                isSelected -> Color.Black
-                                day.hasWorkout -> AccentOrange
-                                else -> DarkTextPrimary
+                                isSelected -> Color.White
+                                day.hasWorkout -> primaryColor
+                                else -> textPrimary
                             },
                             fontSize = 13.sp,
                             fontWeight = if (day.hasWorkout || isSelected) FontWeight.Bold else FontWeight.Normal
@@ -403,9 +406,9 @@ private fun CalendarViewSection(
                         if (day.hasWorkout && !isSelected) {
                             Box(
                                 modifier = Modifier
-                                    .size(3.dp)
+                                    .size(4.dp)
                                     .clip(CircleShape)
-                                    .background(AccentOrange)
+                                    .background(primaryColor)
                             )
                         }
                     }
@@ -419,7 +422,7 @@ private fun CalendarViewSection(
         if (selectedDay != null && selectedDay.hasWorkout) {
             Text(
                 text = "Workouts on ${selectedDay.dayOfMonth} $monthName:",
-                color = DarkTextPrimary,
+                color = textPrimary,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )

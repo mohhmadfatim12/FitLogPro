@@ -38,7 +38,7 @@ class UserPreferencesManager(private val context: Context) {
     }
 
     val darkThemeFlow: Flow<Boolean> = context.dataStore.data.map { prefs ->
-        prefs[KEY_DARK_THEME] ?: true // Gym-friendly dark mode default
+        prefs[KEY_DARK_THEME] ?: false // Default to clean modern Light Theme
     }
 
     val keepScreenOnFlow: Flow<Boolean> = context.dataStore.data.map { prefs ->

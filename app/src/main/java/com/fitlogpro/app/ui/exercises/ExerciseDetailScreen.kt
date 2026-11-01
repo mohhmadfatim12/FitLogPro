@@ -47,13 +47,6 @@ import com.fitlogpro.app.domain.model.PRType
 import com.fitlogpro.app.ui.components.GymNumberField
 import com.fitlogpro.app.ui.components.StatCard
 import com.fitlogpro.app.ui.theme.AccentGold
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.AccentTeal
-import com.fitlogpro.app.ui.theme.DarkBackground
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,21 +79,21 @@ fun ExerciseDetailScreen(
     val mostRepsPr = prs.filter { it.prType == PRType.MOST_REPS }.maxByOrNull { it.value }
 
     Scaffold(
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text(exercise?.name ?: "Exercise Details", color = DarkTextPrimary, fontSize = 18.sp, fontWeight = FontWeight.Bold) },
+                title = { Text(exercise?.name ?: "Exercise Details", color = MaterialTheme.colorScheme.onBackground, fontSize = 18.sp, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = DarkTextPrimary)
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onBackground)
                     }
                 },
                 actions = {
                     IconButton(onClick = { onViewCharts(exerciseId) }) {
-                        Icon(imageVector = Icons.Default.ShowChart, contentDescription = "Charts", tint = AccentOrange)
+                        Icon(imageVector = Icons.Default.ShowChart, contentDescription = "Charts", tint = MaterialTheme.colorScheme.primary)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBackground)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         }
     ) { innerPadding ->
@@ -118,8 +111,8 @@ fun ExerciseDetailScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(14.dp))
-                            .background(DarkSurface)
-                            .border(1.dp, DarkBorder, RoundedCornerShape(14.dp))
+                            .background(MaterialTheme.colorScheme.surface)
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(14.dp))
                             .padding(16.dp)
                     ) {
                         Column {
@@ -128,23 +121,23 @@ fun ExerciseDetailScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Column {
-                                    Text("Muscle Group", color = DarkTextSecondary, fontSize = 11.sp)
-                                    Text(exercise.muscleGroup.displayName, color = DarkTextPrimary, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                                    Text("Muscle Group", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
+                                    Text(exercise.muscleGroup.displayName, color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                                 }
                                 Column {
-                                    Text("Equipment", color = DarkTextSecondary, fontSize = 11.sp)
-                                    Text(exercise.equipment.displayName, color = DarkTextPrimary, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                                    Text("Equipment", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
+                                    Text(exercise.equipment.displayName, color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                                 }
                                 Column {
-                                    Text("Default Rest", color = DarkTextSecondary, fontSize = 11.sp)
-                                    Text("${exercise.defaultRestSeconds}s", color = AccentOrange, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                                    Text("Default Rest", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
+                                    Text("${exercise.defaultRestSeconds}s", color = MaterialTheme.colorScheme.primary, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
 
                             if (exercise.instructions.isNotEmpty()) {
                                 Spacer(modifier = Modifier.height(12.dp))
-                                Text("Instructions", color = DarkTextSecondary, fontSize = 11.sp)
-                                Text(exercise.instructions, color = DarkTextPrimary, fontSize = 13.sp, lineHeight = 18.sp)
+                                Text("Instructions", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
+                                Text(exercise.instructions, color = MaterialTheme.colorScheme.onSurface, fontSize = 13.sp, lineHeight = 18.sp)
                             }
                         }
                     }
@@ -156,7 +149,7 @@ fun ExerciseDetailScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(imageVector = Icons.Default.EmojiEvents, contentDescription = null, tint = AccentGold, modifier = Modifier.size(20.dp))
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Personal Records", color = DarkTextPrimary, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text("Personal Records", color = MaterialTheme.colorScheme.onBackground, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 }
             }
 
@@ -185,14 +178,14 @@ fun ExerciseDetailScreen(
                         title = "Best Set Volume",
                         value = bestVolPr?.let { "${it.value} kg" } ?: "—",
                         icon = Icons.Default.EmojiEvents,
-                        iconTint = AccentTeal,
+                        iconTint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
                         title = "Most Reps",
                         value = mostRepsPr?.let { "${it.value.toInt()} reps" } ?: "—",
                         icon = Icons.Default.EmojiEvents,
-                        iconTint = AccentTeal,
+                        iconTint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -204,14 +197,14 @@ fun ExerciseDetailScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(14.dp))
-                        .background(DarkSurface)
-                        .border(1.dp, DarkBorder, RoundedCornerShape(14.dp))
+                        .background(MaterialTheme.colorScheme.surface)
+                        .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(14.dp))
                         .padding(16.dp)
                 ) {
                     Column {
                         Text(
                             text = "Estimated 1RM Calculator (Epley)",
-                            color = DarkTextPrimary,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -219,11 +212,11 @@ fun ExerciseDetailScreen(
 
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             Column(modifier = Modifier.weight(1f)) {
-                                Text("Weight (kg)", color = DarkTextSecondary, fontSize = 11.sp)
+                                Text("Weight (kg)", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                                 GymNumberField(value = calcWeight, onValueChange = { calcWeight = it }, placeholder = "100")
                             }
                             Column(modifier = Modifier.weight(1f)) {
-                                Text("Reps Completed", color = DarkTextSecondary, fontSize = 11.sp)
+                                Text("Reps Completed", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                                 GymNumberField(value = calcReps, onValueChange = { calcReps = it }, placeholder = "5")
                             }
                         }
@@ -234,19 +227,19 @@ fun ExerciseDetailScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(Color(0xFF222731))
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
                                 .padding(12.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Estimated 1RM:", color = DarkTextSecondary, fontSize = 13.sp)
-                            Text("$calculated1Rm kg", color = AccentOrange, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                            Text("Estimated 1RM:", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
+                            Text("$calculated1Rm kg", color = MaterialTheme.colorScheme.primary, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                         }
 
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // Percentage breakdown table
-                        Text("Repetition Percentage Brackets", color = DarkTextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                        Text("Repetition Percentage Brackets", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                         Spacer(modifier = Modifier.height(6.dp))
 
                         percentageTable.entries.chunked(2).forEach { rowEntries ->
@@ -254,7 +247,7 @@ fun ExerciseDetailScreen(
                                 rowEntries.forEach { (pct, weight) ->
                                     Text(
                                         text = "$pct%: $weight kg",
-                                        color = DarkTextPrimary,
+                                        color = MaterialTheme.colorScheme.onSurface,
                                         fontSize = 12.sp,
                                         modifier = Modifier.weight(1f).padding(vertical = 2.dp)
                                     )
@@ -269,15 +262,15 @@ fun ExerciseDetailScreen(
             item {
                 Button(
                     onClick = { onViewCharts(exerciseId) },
-                    colors = ButtonDefaults.buttonColors(containerColor = AccentOrange),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.ShowChart, contentDescription = null, tint = Color.Black)
+                    Icon(imageVector = Icons.Default.ShowChart, contentDescription = null, tint = Color.White)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("View Progress Charts", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                    Text("View Progress Charts", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 }
             }
         }

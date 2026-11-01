@@ -28,6 +28,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,13 +44,6 @@ import androidx.compose.ui.unit.sp
 import com.fitlogpro.app.data.local.entity.RoutineEntity
 import com.fitlogpro.app.domain.model.ActiveWorkoutSession
 import com.fitlogpro.app.ui.components.EmptyStateView
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.AccentTeal
-import com.fitlogpro.app.ui.theme.DarkBackground
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -67,12 +61,12 @@ fun RoutineListScreen(
     val routines by viewModel.routines.collectAsState()
 
     Scaffold(
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onCreateRoutine,
-                containerColor = AccentOrange,
-                contentColor = Color.Black
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = Color.White
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Create Routine")
             }
@@ -109,13 +103,13 @@ fun RoutineListScreen(
                 ) {
                     Text(
                         text = "My Routines",
-                        color = DarkTextPrimary,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = "${routines.size} templates",
-                        color = DarkTextSecondary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 12.sp
                     )
                 }
@@ -153,9 +147,9 @@ private fun ActiveRecoveryBanner(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .background(Color(0xFF2C1E08))
-            .border(1.5.dp, AccentOrange, RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color(0xFFFEF3C7))
+            .border(1.5.dp, Color(0xFFF59E0B), RoundedCornerShape(16.dp))
             .clickable(onClick = onResume)
             .padding(14.dp)
     ) {
@@ -168,30 +162,33 @@ private fun ActiveRecoveryBanner(
                 Icon(
                     imageVector = Icons.Default.WarningAmber,
                     contentDescription = null,
-                    tint = AccentOrange,
+                    tint = Color(0xFFD97706),
                     modifier = Modifier.size(28.dp)
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Column {
                     Text(
                         text = "Workout In Progress",
-                        color = AccentOrange,
+                        color = Color(0xFFB45309),
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp
                     )
                     Text(
                         text = "${session.workoutName} • Tap to resume",
-                        color = DarkTextSecondary,
+                        color = Color(0xFF92400E),
                         fontSize = 12.sp
                     )
                 }
             }
             Button(
                 onClick = onResume,
-                colors = ButtonDefaults.buttonColors(containerColor = AccentOrange),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFF59E0B),
+                    contentColor = Color.White
+                ),
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Text("Resume", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                Text("Resume", fontWeight = FontWeight.Bold, fontSize = 12.sp)
             }
         }
     }
@@ -199,12 +196,18 @@ private fun ActiveRecoveryBanner(
 
 @Composable
 private fun QuickStartCard(onStart: () -> Unit) {
+    val cardBg = MaterialTheme.colorScheme.surface
+    val cardBorder = MaterialTheme.colorScheme.outline
+    val textPrimary = MaterialTheme.colorScheme.onSurface
+    val textSecondary = MaterialTheme.colorScheme.onSurfaceVariant
+    val primaryColor = MaterialTheme.colorScheme.primary
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .background(DarkSurface)
-            .border(1.dp, DarkBorder, RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(16.dp))
+            .background(cardBg)
+            .border(1.dp, cardBorder, RoundedCornerShape(16.dp))
             .padding(16.dp)
     ) {
         Row(
@@ -215,32 +218,34 @@ private fun QuickStartCard(onStart: () -> Unit) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "Quick Start",
-                    color = DarkTextPrimary,
-                    fontSize = 16.sp,
+                    color = textPrimary,
+                    fontSize = 17.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = "Log an empty workout without a template",
-                    color = DarkTextSecondary,
+                    color = textSecondary,
                     fontSize = 12.sp
                 )
             }
             Button(
                 onClick = onStart,
-                colors = ButtonDefaults.buttonColors(containerColor = AccentTeal),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = primaryColor,
+                    contentColor = Color.White
+                ),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.PlayArrow,
                     contentDescription = null,
-                    tint = Color.Black,
+                    tint = Color.White,
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = "Start",
-                    color = Color.Black,
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp
                 )
@@ -260,12 +265,18 @@ private fun RoutineCard(
         "Last performed: ${dateFormat.format(Date(it))}"
     } ?: "Never performed"
 
+    val cardBg = MaterialTheme.colorScheme.surface
+    val cardBorder = MaterialTheme.colorScheme.outline
+    val textPrimary = MaterialTheme.colorScheme.onSurface
+    val textSecondary = MaterialTheme.colorScheme.onSurfaceVariant
+    val primaryColor = MaterialTheme.colorScheme.primary
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .background(DarkSurface)
-            .border(1.dp, DarkBorder, RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(16.dp))
+            .background(cardBg)
+            .border(1.dp, cardBorder, RoundedCornerShape(16.dp))
             .clickable(onClick = onCardClick)
             .padding(16.dp)
     ) {
@@ -276,15 +287,15 @@ private fun RoutineCard(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = routine.name,
-                    color = DarkTextPrimary,
-                    fontSize = 15.sp,
+                    color = textPrimary,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
                 if (routine.description.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(
                         text = routine.description,
-                        color = DarkTextSecondary,
+                        color = textSecondary,
                         fontSize = 12.sp,
                         maxLines = 2
                     )
@@ -292,24 +303,24 @@ private fun RoutineCard(
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = lastDoneText,
-                    color = Color(0xFF6B7280),
+                    color = textSecondary.copy(alpha = 0.8f),
                     fontSize = 11.sp
                 )
             }
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(10.dp))
 
             IconButton(
                 onClick = onStart,
                 modifier = Modifier
                     .size(42.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFF222731))
+                    .background(MaterialTheme.colorScheme.primaryContainer)
             ) {
                 Icon(
                     imageVector = Icons.Default.PlayArrow,
                     contentDescription = "Start Routine",
-                    tint = AccentOrange
+                    tint = primaryColor
                 )
             }
         }

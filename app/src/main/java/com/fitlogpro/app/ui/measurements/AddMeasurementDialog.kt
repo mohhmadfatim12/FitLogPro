@@ -28,11 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitlogpro.app.domain.model.MeasurementType
 import com.fitlogpro.app.ui.components.GymNumberField
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
 
 @Composable
 fun AddMeasurementDialog(
@@ -50,7 +45,7 @@ fun AddMeasurementDialog(
         title = {
             Text(
                 text = "Log ${type.displayName}",
-                color = DarkTextPrimary,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
@@ -58,7 +53,7 @@ fun AddMeasurementDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 Column {
-                    Text("Value ($unitLabel)", color = DarkTextSecondary, fontSize = 12.sp)
+                    Text("Value ($unitLabel)", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
                     Spacer(modifier = Modifier.height(4.dp))
                     GymNumberField(
                         value = rawValue,
@@ -75,10 +70,10 @@ fun AddMeasurementDialog(
                     label = { Text("Notes (Optional)") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = AccentOrange,
-                        unfocusedBorderColor = DarkBorder,
-                        focusedTextColor = DarkTextPrimary,
-                        unfocusedTextColor = DarkTextPrimary
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -93,16 +88,19 @@ fun AddMeasurementDialog(
                     }
                 },
                 enabled = (rawValue.toDoubleOrNull() ?: 0.0) > 0,
-                colors = ButtonDefaults.buttonColors(containerColor = AccentOrange)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = Color.White
+                )
             ) {
-                Text("Save", color = Color.Black, fontWeight = FontWeight.Bold)
+                Text("Save", fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = DarkTextPrimary)
+                Text("Cancel", color = MaterialTheme.colorScheme.onSurface)
             }
         },
-        containerColor = DarkSurface
+        containerColor = MaterialTheme.colorScheme.surface
     )
 }

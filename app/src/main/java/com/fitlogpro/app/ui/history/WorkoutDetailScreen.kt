@@ -52,14 +52,6 @@ import com.fitlogpro.app.ui.components.PRBadge
 import com.fitlogpro.app.ui.components.SetTypeBadge
 import com.fitlogpro.app.ui.components.StatCard
 import com.fitlogpro.app.ui.theme.AccentGold
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.AccentTeal
-import com.fitlogpro.app.ui.theme.DarkBackground
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
-import com.fitlogpro.app.ui.theme.DarkTextTertiary
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -80,10 +72,10 @@ fun WorkoutDetailScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(DarkBackground),
+                .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
-            Text("Workout not found", color = DarkTextSecondary)
+            Text("Workout not found", color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         return
     }
@@ -94,24 +86,24 @@ fun WorkoutDetailScreen(
     val prCount = workoutDetail.exercises.flatMap { it.sets }.count { it.isPr }
 
     Scaffold(
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text(workout.name, color = DarkTextPrimary, fontSize = 18.sp, fontWeight = FontWeight.Bold) },
+                title = { Text(workout.name, color = MaterialTheme.colorScheme.onSurface, fontSize = 18.sp, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = DarkTextPrimary)
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurface)
                     }
                 },
                 actions = {
                     IconButton(onClick = { onEdit(workoutId) }) {
-                        Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit Workout", tint = DarkTextPrimary)
+                        Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit Workout", tint = MaterialTheme.colorScheme.onSurface)
                     }
                     IconButton(onClick = { showDeleteConfirm = true }) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Workout", tint = Color(0xFFFF5252))
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Workout", tint = Color(0xFFEF4444))
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBackground)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
             )
         }
     ) { innerPadding ->
@@ -124,7 +116,7 @@ fun WorkoutDetailScreen(
         ) {
             // Date & Summary Card
             item {
-                Text(text = formattedDate, color = DarkTextSecondary, fontSize = 13.sp)
+                Text(text = formattedDate, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -132,14 +124,14 @@ fun WorkoutDetailScreen(
                         title = "Duration",
                         value = "${workout.durationSeconds / 60}m",
                         icon = Icons.Default.Timer,
-                        iconTint = AccentTeal,
+                        iconTint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f)
                     )
                     StatCard(
                         title = "Volume",
                         value = "${String.format("%,.0f", workout.totalVolumeKg)} kg",
                         icon = Icons.Default.FitnessCenter,
-                        iconTint = AccentOrange,
+                        iconTint = Color(0xFF10B981),
                         modifier = Modifier.weight(1.3f)
                     )
                     StatCard(
@@ -158,15 +150,15 @@ fun WorkoutDetailScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(DarkSurface)
-                            .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(MaterialTheme.colorScheme.surface)
+                            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp))
                             .padding(14.dp)
                     ) {
                         Column {
-                            Text("Workout Notes", color = DarkTextSecondary, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                            Text("Workout Notes", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text(workout.notes, color = DarkTextPrimary, fontSize = 13.sp)
+                            Text(workout.notes, color = MaterialTheme.colorScheme.onSurface, fontSize = 13.sp)
                         }
                     }
                 }
@@ -175,7 +167,7 @@ fun WorkoutDetailScreen(
             item {
                 Text(
                     text = "Exercises (${workoutDetail.exercises.size})",
-                    color = DarkTextPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -191,8 +183,8 @@ fun WorkoutDetailScreen(
     if (showDeleteConfirm) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirm = false },
-            title = { Text("Delete Workout?", color = DarkTextPrimary) },
-            text = { Text("Are you sure you want to delete '${workout.name}'? This action cannot be undone.", color = DarkTextSecondary) },
+            title = { Text("Delete Workout?", color = MaterialTheme.colorScheme.onSurface) },
+            text = { Text("Are you sure you want to delete '${workout.name}'? This action cannot be undone.", color = MaterialTheme.colorScheme.onSurfaceVariant) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -201,15 +193,15 @@ fun WorkoutDetailScreen(
                         onBack()
                     }
                 ) {
-                    Text("Delete", color = Color(0xFFFF5252), fontWeight = FontWeight.Bold)
+                    Text("Delete", color = Color(0xFFEF4444), fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteConfirm = false }) {
-                    Text("Cancel", color = DarkTextPrimary)
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurface)
                 }
             },
-            containerColor = DarkSurface
+            containerColor = MaterialTheme.colorScheme.surface
         )
     }
 }
@@ -223,20 +215,20 @@ private fun DetailExerciseCard(item: WorkoutExerciseWithSets) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
-            .background(DarkSurface)
-            .border(1.dp, DarkBorder, RoundedCornerShape(14.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp))
             .padding(14.dp)
     ) {
         Column {
             Text(
                 text = exercise.name,
-                color = DarkTextPrimary,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = "${exercise.muscleGroup.displayName} • ${exercise.equipment.displayName}",
-                color = DarkTextSecondary,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 11.sp
             )
 
@@ -244,10 +236,10 @@ private fun DetailExerciseCard(item: WorkoutExerciseWithSets) {
 
             // Sets Header
             Row(modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp)) {
-                Text("SET", color = DarkTextTertiary, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(36.dp), textAlign = TextAlign.Center)
-                Text("WEIGHT", color = DarkTextTertiary, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
-                Text("REPS", color = DarkTextTertiary, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
-                Text("DETAILS", color = DarkTextTertiary, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.5f), textAlign = TextAlign.Center)
+                Text("SET", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(36.dp), textAlign = TextAlign.Center)
+                Text("WEIGHT", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+                Text("REPS", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+                Text("DETAILS", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.5f), textAlign = TextAlign.Center)
             }
 
             sets.forEach { set ->
@@ -264,7 +256,7 @@ private fun DetailSetRow(set: WorkoutSetEntity) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(6.dp))
-            .background(Color(0xFF1B1F27))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(horizontal = 4.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -272,7 +264,7 @@ private fun DetailSetRow(set: WorkoutSetEntity) {
 
         Text(
             text = if (set.weightKg > 0) "${set.weightKg} kg" else "—",
-            color = DarkTextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
@@ -281,7 +273,7 @@ private fun DetailSetRow(set: WorkoutSetEntity) {
 
         Text(
             text = "${set.reps} reps",
-            color = DarkTextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
@@ -294,7 +286,7 @@ private fun DetailSetRow(set: WorkoutSetEntity) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (set.rpe != null) {
-                Text("RPE ${set.rpe}", color = DarkTextSecondary, fontSize = 11.sp)
+                Text("RPE ${set.rpe}", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                 Spacer(modifier = Modifier.width(6.dp))
             }
             if (set.isPr) {

@@ -46,12 +46,6 @@ import com.fitlogpro.app.data.local.entity.ExerciseEntity
 import com.fitlogpro.app.domain.model.MuscleGroup
 import com.fitlogpro.app.ui.components.EmptyStateView
 import com.fitlogpro.app.ui.theme.AccentGold
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.DarkBackground
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
 
 @Composable
 fun ExerciseListScreen(
@@ -64,12 +58,12 @@ fun ExerciseListScreen(
     val exercises by viewModel.filteredExercises.collectAsState()
 
     Scaffold(
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onCreateExercise,
-                containerColor = AccentOrange,
-                contentColor = Color.Black
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = Color.White
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Exercise")
             }
@@ -87,14 +81,14 @@ fun ExerciseListScreen(
                     onValueChange = { viewModel.setSearchQuery(it) },
                     placeholder = { Text("Search exercises...") },
                     leadingIcon = {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = null, tint = DarkTextSecondary)
+                        Icon(imageVector = Icons.Default.Search, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = AccentOrange,
-                        unfocusedBorderColor = DarkBorder,
-                        focusedTextColor = DarkTextPrimary,
-                        unfocusedTextColor = DarkTextPrimary
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -162,15 +156,15 @@ private fun FilterChip(
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(if (isSelected) AccentOrange else Color(0xFF222731))
-            .border(1.dp, if (isSelected) AccentOrange else DarkBorder, RoundedCornerShape(8.dp))
+            .background(if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
+            .border(1.dp, if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = label,
-            color = if (isSelected) Color.Black else DarkTextPrimary,
+            color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 12.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
         )
@@ -187,8 +181,8 @@ private fun ExerciseRowCard(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(DarkSurface)
-            .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
             .padding(14.dp)
     ) {
@@ -200,7 +194,7 @@ private fun ExerciseRowCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = exercise.name,
-                        color = DarkTextPrimary,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -209,12 +203,12 @@ private fun ExerciseRowCard(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(Color(0xFF2E2612))
+                                .background(Color(0xFFFEF3C7))
                                 .padding(horizontal = 5.dp, vertical = 2.dp)
                         ) {
                             Text(
                                 text = "CUSTOM",
-                                color = AccentGold,
+                                color = Color(0xFFB45309),
                                 fontSize = 9.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -224,7 +218,7 @@ private fun ExerciseRowCard(
                 Spacer(modifier = Modifier.height(3.dp))
                 Text(
                     text = "${exercise.muscleGroup.displayName} • ${exercise.equipment.displayName} • ${exercise.exerciseType.displayName}",
-                    color = DarkTextSecondary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 12.sp
                 )
             }
@@ -233,7 +227,7 @@ private fun ExerciseRowCard(
                 Icon(
                     imageVector = if (exercise.isFavorite) Icons.Default.Star else Icons.Outlined.StarBorder,
                     contentDescription = "Favorite",
-                    tint = if (exercise.isFavorite) AccentGold else DarkTextSecondary
+                    tint = if (exercise.isFavorite) AccentGold else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

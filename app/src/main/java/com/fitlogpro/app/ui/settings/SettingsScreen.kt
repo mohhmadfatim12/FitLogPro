@@ -55,14 +55,6 @@ import androidx.compose.ui.unit.sp
 import com.fitlogpro.app.data.backup.BackupValidationResult
 import com.fitlogpro.app.domain.model.DistanceUnit
 import com.fitlogpro.app.domain.model.WeightUnit
-import com.fitlogpro.app.ui.theme.AccentOrange
-import com.fitlogpro.app.ui.theme.AccentTeal
-import com.fitlogpro.app.ui.theme.DarkBackground
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextPrimary
-import com.fitlogpro.app.ui.theme.DarkTextSecondary
-import com.fitlogpro.app.ui.theme.DarkTextTertiary
 import kotlinx.coroutines.launch
 
 @Composable
@@ -85,7 +77,7 @@ fun SettingsScreen(
     var showRestoreDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        containerColor = DarkBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
@@ -98,7 +90,7 @@ fun SettingsScreen(
             item {
                 Text(
                     text = "Settings & Data Safety",
-                    color = DarkTextPrimary,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -114,13 +106,13 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
-                            Text("Weight Unit", color = DarkTextPrimary, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                            Text("Applies to exercises, 1RM, volume, and body weight", color = DarkTextSecondary, fontSize = 11.sp)
+                            Text("Weight Unit", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                            Text("Applies to exercises, 1RM, volume, and body weight", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                         }
                         Row(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(Color(0xFF222731))
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
                                 .padding(2.dp)
                         ) {
                             UnitToggleChip("kg", weightUnit == WeightUnit.KG) { viewModel.setWeightUnit(WeightUnit.KG) }
@@ -137,13 +129,13 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
-                            Text("Distance Unit", color = DarkTextPrimary, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                            Text("Applies to cardio running, cycling, and rowing", color = DarkTextSecondary, fontSize = 11.sp)
+                            Text("Distance Unit", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                            Text("Applies to cardio running, cycling, and rowing", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                         }
                         Row(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(Color(0xFF222731))
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
                                 .padding(2.dp)
                         ) {
                             UnitToggleChip("km", distanceUnit == DistanceUnit.KM) { viewModel.setDistanceUnit(DistanceUnit.KM) }
@@ -163,13 +155,13 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("High-Contrast Dark Theme", color = DarkTextPrimary, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                            Text("Gym-optimized high-contrast aesthetic", color = DarkTextSecondary, fontSize = 11.sp)
+                            Text("Dark Theme", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                            Text("Toggle high-contrast dark gym mode", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                         }
                         Switch(
                             checked = darkTheme,
                             onCheckedChange = { viewModel.setDarkTheme(it) },
-                            colors = SwitchDefaults.colors(checkedThumbColor = Color.Black, checkedTrackColor = AccentOrange)
+                            colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = MaterialTheme.colorScheme.primary)
                         )
                     }
 
@@ -182,13 +174,13 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("Keep Screen On", color = DarkTextPrimary, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                            Text("Prevent device sleep during an active workout session", color = DarkTextSecondary, fontSize = 11.sp)
+                            Text("Keep Screen On", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                            Text("Prevent device sleep during an active workout session", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                         }
                         Switch(
                             checked = keepScreenOn,
                             onCheckedChange = { viewModel.setKeepScreenOn(it) },
-                            colors = SwitchDefaults.colors(checkedThumbColor = Color.Black, checkedTrackColor = AccentOrange)
+                            colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = MaterialTheme.colorScheme.primary)
                         )
                     }
 
@@ -196,7 +188,7 @@ fun SettingsScreen(
 
                     // Default Rest Seconds
                     Column {
-                        Text("Default Rest Timer Duration", color = DarkTextPrimary, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                        Text("Default Rest Timer Duration", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                         Spacer(modifier = Modifier.height(6.dp))
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             listOf(45, 60, 90, 120, 180).forEach { sec ->
@@ -205,15 +197,15 @@ fun SettingsScreen(
                                     modifier = Modifier
                                         .weight(1f)
                                         .clip(RoundedCornerShape(8.dp))
-                                        .background(if (isSel) AccentOrange else Color(0xFF222731))
-                                        .border(1.dp, if (isSel) AccentOrange else DarkBorder, RoundedCornerShape(8.dp))
+                                        .background(if (isSel) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
+                                        .border(1.dp, if (isSel) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
                                         .clickable { viewModel.setDefaultRestSeconds(sec) }
                                         .padding(vertical = 8.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
                                         text = "${sec}s",
-                                        color = if (isSel) Color.Black else DarkTextPrimary,
+                                        color = if (isSel) Color.White else MaterialTheme.colorScheme.onSurface,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 12.sp
                                     )
@@ -231,13 +223,13 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("Timer Vibration Feedback", color = DarkTextPrimary, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                            Text("Haptic pulse on rest timer completion", color = DarkTextSecondary, fontSize = 11.sp)
+                            Text("Timer Vibration Feedback", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                            Text("Haptic pulse on rest timer completion", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                         }
                         Switch(
                             checked = restVibration,
                             onCheckedChange = { viewModel.setRestVibration(it) },
-                            colors = SwitchDefaults.colors(checkedThumbColor = Color.Black, checkedTrackColor = AccentOrange)
+                            colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = MaterialTheme.colorScheme.primary)
                         )
                     }
                 }
@@ -248,7 +240,7 @@ fun SettingsScreen(
                 SettingsSection(title = "CSV Data Export") {
                     Text(
                         text = "Export standard comma-separated files compatible with Excel, Google Sheets, or Apple Numbers.",
-                        color = DarkTextSecondary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 12.sp
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -284,7 +276,7 @@ fun SettingsScreen(
                 SettingsSection(title = "Database Backup & Restore") {
                     Text(
                         text = "Complete database snapshot in validated JSON schema. 100% offline and portable.",
-                        color = DarkTextSecondary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 12.sp
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -297,24 +289,24 @@ fun SettingsScreen(
                                     showExportResultDialog = Pair("FitLog Pro JSON Backup", backupJson)
                                 }
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = AccentOrange),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                             shape = RoundedCornerShape(10.dp),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Icon(imageVector = Icons.Default.Download, contentDescription = null, tint = Color.Black, modifier = Modifier.size(16.dp))
+                            Icon(imageVector = Icons.Default.Download, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Create Backup", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            Text("Create Backup", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                         }
 
                         Button(
                             onClick = { showRestoreDialog = true },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF222731)),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
                             shape = RoundedCornerShape(10.dp),
-                            modifier = Modifier.weight(1f).border(1.dp, DarkBorder, RoundedCornerShape(10.dp))
+                            modifier = Modifier.weight(1f).border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(10.dp))
                         ) {
-                            Icon(imageVector = Icons.Default.Restore, contentDescription = null, tint = AccentTeal, modifier = Modifier.size(16.dp))
+                            Icon(imageVector = Icons.Default.Restore, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Restore Backup", color = AccentTeal, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            Text("Restore Backup", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                         }
                     }
                 }
@@ -324,11 +316,11 @@ fun SettingsScreen(
             item {
                 SettingsSection(title = "About FitLog Pro") {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(imageVector = Icons.Default.Info, contentDescription = null, tint = DarkTextSecondary, modifier = Modifier.size(18.dp))
+                        Icon(imageVector = Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Column {
-                            Text("FitLog Pro • v1.0.0", color = DarkTextPrimary, fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                            Text("100% Offline • Zero Analytics • Zero Cloud Sync • Room & SQLite", color = DarkTextSecondary, fontSize = 11.sp)
+                            Text("FitLog Pro • v1.0.0", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                            Text("100% Offline • Zero Analytics • Zero Cloud Sync • Room & SQLite", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
                         }
                     }
                 }
@@ -345,22 +337,22 @@ fun SettingsScreen(
         val (title, content) = showExportResultDialog!!
         AlertDialog(
             onDismissRequest = { showExportResultDialog = null },
-            title = { Text(title, color = DarkTextPrimary, fontWeight = FontWeight.Bold) },
+            title = { Text(title, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold) },
             text = {
                 Column {
-                    Text("Generated payload ready for export:", color = DarkTextSecondary, fontSize = 12.sp)
+                    Text("Generated payload ready for export:", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
                     Spacer(modifier = Modifier.height(8.dp))
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(180.dp)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(Color(0xFF161920))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
                             .padding(8.dp)
                     ) {
                         Text(
                             text = content.take(1000) + if (content.length > 1000) "\n... (${content.length} characters)" else "",
-                            color = DarkTextPrimary,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 10.sp,
                             fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
                         )
@@ -374,17 +366,17 @@ fun SettingsScreen(
                         Toast.makeText(context, "Copied to clipboard!", Toast.LENGTH_SHORT).show()
                         showExportResultDialog = null
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = AccentOrange)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text("Copy to Clipboard", color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text("Copy to Clipboard", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showExportResultDialog = null }) {
-                    Text("Close", color = DarkTextPrimary)
+                    Text("Close", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
-            containerColor = DarkSurface
+            containerColor = MaterialTheme.colorScheme.surface
         )
     }
 
@@ -396,12 +388,12 @@ fun SettingsScreen(
 
         AlertDialog(
             onDismissRequest = { showRestoreDialog = false },
-            title = { Text("Restore JSON Backup", color = DarkTextPrimary, fontWeight = FontWeight.Bold) },
+            title = { Text("Restore JSON Backup", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(
                         text = "Paste your FitLog Pro backup JSON payload below to validate and restore.",
-                        color = DarkTextSecondary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 12.sp
                     )
 
@@ -429,10 +421,10 @@ fun SettingsScreen(
                         minLines = 4,
                         maxLines = 6,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = AccentOrange,
-                            unfocusedBorderColor = DarkBorder,
-                            focusedTextColor = DarkTextPrimary,
-                            unfocusedTextColor = DarkTextPrimary
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                         ),
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -440,7 +432,7 @@ fun SettingsScreen(
                     if (validationStatus != null) {
                         Text(
                             text = validationStatus!!,
-                            color = if (isValid) AccentTeal else Color(0xFFFF5252),
+                            color = if (isValid) Color(0xFF10B981) else Color(0xFFEF4444),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -461,17 +453,17 @@ fun SettingsScreen(
                         }
                     },
                     enabled = isValid,
-                    colors = ButtonDefaults.buttonColors(containerColor = AccentOrange)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text("Confirm Restore", color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text("Confirm Restore", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showRestoreDialog = false }) {
-                    Text("Cancel", color = DarkTextPrimary)
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
-            containerColor = DarkSurface
+            containerColor = MaterialTheme.colorScheme.surface
         )
     }
 }
@@ -485,14 +477,14 @@ private fun SettingsSection(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
-            .background(DarkSurface)
-            .border(1.dp, DarkBorder, RoundedCornerShape(14.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(14.dp))
             .padding(16.dp)
     ) {
         Column {
             Text(
                 text = title,
-                color = AccentOrange,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 0.5.sp
@@ -512,14 +504,14 @@ private fun UnitToggleChip(
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(6.dp))
-            .background(if (isSelected) AccentOrange else Color.Transparent)
+            .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
             .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = label,
-            color = if (isSelected) Color.Black else DarkTextPrimary,
+            color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold
         )
@@ -535,16 +527,16 @@ private fun ExportButton(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFF222731))
-            .border(1.dp, DarkBorder, RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
             .padding(vertical = 10.dp, horizontal = 12.dp),
         contentAlignment = Alignment.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = Icons.Default.FileDownload, contentDescription = null, tint = AccentTeal, modifier = Modifier.size(16.dp))
+            Icon(imageVector = Icons.Default.FileDownload, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
             Spacer(modifier = Modifier.width(6.dp))
-            Text(label, color = DarkTextPrimary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+            Text(label, color = MaterialTheme.colorScheme.onSurface, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
         }
     }
 }

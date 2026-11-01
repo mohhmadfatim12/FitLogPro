@@ -22,9 +22,6 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitlogpro.app.ui.theme.AccentTeal
-import com.fitlogpro.app.ui.theme.DarkBorder
-import com.fitlogpro.app.ui.theme.DarkSurface
-import com.fitlogpro.app.ui.theme.DarkTextTertiary
 import kotlin.math.max
 
 data class BarChartItem(
@@ -39,20 +36,24 @@ fun CustomBarChart(
     barColor: Color = AccentTeal,
     modifier: Modifier = Modifier
 ) {
+    val surfaceColor = androidx.compose.material3.MaterialTheme.colorScheme.surface
+    val outlineColor = androidx.compose.material3.MaterialTheme.colorScheme.outline
+    val textMuted = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(200.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(DarkSurface)
-            .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+            .background(surfaceColor)
+            .border(1.dp, outlineColor, RoundedCornerShape(12.dp))
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         if (items.isEmpty()) {
             Text(
                 text = "No volume data logged yet.\nLog workouts to view weekly volume chart.",
-                color = DarkTextTertiary,
+                color = textMuted,
                 fontSize = 13.sp,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
