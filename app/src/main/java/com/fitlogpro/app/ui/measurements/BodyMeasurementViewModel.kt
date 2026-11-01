@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -30,6 +31,14 @@ class BodyMeasurementViewModel(
     val weightUnit: StateFlow<WeightUnit> = userPreferencesManager.weightUnitFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), WeightUnit.KG)
 
+    val userHeightCm: StateFlow<Float> = userPreferencesManager.userHeightCmFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 175.0f)
+
+    val latestWeightEntity: StateFlow<BodyMeasurementEntity?> = measurementRepository
+        .getMeasurementsByType(MeasurementType.WEIGHT)
+        .map { list -> list.maxByOrNull { it.recordedEpochMs } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
     private val _selectedType = MutableStateFlow(MeasurementType.WEIGHT)
     val selectedType: StateFlow<MeasurementType> = _selectedType.asStateFlow()
 
@@ -40,6 +49,12 @@ class BodyMeasurementViewModel(
 
     fun selectMeasurementType(type: MeasurementType) {
         _selectedType.value = type
+    }
+
+    fun updateHeight(heightCm: Float) {
+        viewModelScope.launch {
+            userPreferencesManager.setUserHeightCm(heightCm)
+        }
     }
 
     fun saveMeasurement(type: MeasurementType, rawValue: Double, notes: String) {

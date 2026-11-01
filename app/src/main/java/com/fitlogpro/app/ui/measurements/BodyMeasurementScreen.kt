@@ -18,9 +18,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material3.FloatingActionButton
@@ -43,21 +45,36 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fitlogpro.app.data.local.entity.BodyMeasurementEntity
+import com.fitlogpro.app.domain.calculator.BmiCalculator
+import com.fitlogpro.app.domain.calculator.BmiCategory
 import com.fitlogpro.app.domain.calculator.UnitConverter
 import com.fitlogpro.app.domain.model.MeasurementType
 import com.fitlogpro.app.domain.model.WeightUnit
 import com.fitlogpro.app.ui.components.CustomLineChart
 import com.fitlogpro.app.ui.components.StatCard
+import com.fitlogpro.app.ui.theme.ElectricLime
+import com.fitlogpro.app.ui.theme.ElectricLimeText
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+enum class BodyScreenTab {
+    MEASUREMENTS,
+    BMI_CALCULATOR
+}
 
 @Composable
 fun BodyMeasurementScreen(
     viewModel: BodyMeasurementViewModel
 ) {
+    var currentTab by remember { mutableStateOf(BodyScreenTab.MEASUREMENTS) }
+
     val weightUnit by viewModel.weightUnit.collectAsState()
     val isMetric = weightUnit == WeightUnit.KG
+
+    val userHeightCm by viewModel.userHeightCm.collectAsState()
+    val latestWeightEntity by viewModel.latestWeightEntity.collectAsState()
+    val latestWeightKg = latestWeightEntity?.value
 
     val selectedType by viewModel.selectedType.collectAsState()
     val measurements by viewModel.measurementsForType.collectAsState()
@@ -80,12 +97,14 @@ fun BodyMeasurementScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showAddDialog = true },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = Color.White
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Log Measurement")
+            if (currentTab == BodyScreenTab.MEASUREMENTS) {
+                FloatingActionButton(
+                    onClick = { showAddDialog = true },
+                    containerColor = ElectricLime,
+                    contentColor = ElectricLimeText
+                ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Log Measurement")
+                }
             }
         }
     ) { innerPadding ->
@@ -96,93 +115,228 @@ fun BodyMeasurementScreen(
         ) {
             // Header
             Text(
-                text = "Body Measurements",
+                text = "Body Tracking",
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
             )
 
-            // Measurement Type Horizontal Chips
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(bottom = 12.dp)
+            // Segmented Top Switch: Measurements vs BMI Calculator
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(3.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(MeasurementType.entries) { type ->
-                    val isSel = selectedType == type
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(if (isSel) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
-                            .border(1.dp, if (isSel) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
-                            .clickable { viewModel.selectMeasurementType(type) }
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
+                val isMeas = currentTab == BodyScreenTab.MEASUREMENTS
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(9.dp))
+                        .background(if (isMeas) MaterialTheme.colorScheme.surface else Color.Transparent)
+                        .clickable { currentTab = BodyScreenTab.MEASUREMENTS }
+                        .padding(vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Measurements",
+                        fontSize = 13.sp,
+                        fontWeight = if (isMeas) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isMeas) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                val isBmi = currentTab == BodyScreenTab.BMI_CALCULATOR
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(9.dp))
+                        .background(if (isBmi) MaterialTheme.colorScheme.surface else Color.Transparent)
+                        .clickable { currentTab = BodyScreenTab.BMI_CALCULATOR }
+                        .padding(vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Calculate,
+                            contentDescription = null,
+                            tint = if (isBmi) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = type.displayName,
-                            color = if (isSel) com.fitlogpro.app.ui.theme.ElectricLimeText else MaterialTheme.colorScheme.onSurface,
-                            fontSize = 12.sp,
-                            fontWeight = if (isSel) FontWeight.Bold else FontWeight.Medium
+                            text = "BMI Calculator",
+                            fontSize = 13.sp,
+                            fontWeight = if (isBmi) FontWeight.Bold else FontWeight.Medium,
+                            color = if (isBmi) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
             }
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp),
-                contentPadding = PaddingValues(bottom = 80.dp)
-            ) {
-                // Latest Stat Card
-                item {
-                    StatCard(
-                        title = "Latest ${selectedType.displayName}",
-                        value = latestDisplay,
-                        icon = Icons.Default.MonitorWeight,
-                        iconTint = MaterialTheme.colorScheme.primary,
-                        subtitle = latest?.let { "Recorded on ${SimpleDateFormat("MMM d, yyyy", Locale.US).format(Date(it.recordedEpochMs))}" }
-                    )
-                }
+            Spacer(modifier = Modifier.height(8.dp))
 
-                // Trend Curve
-                item {
-                    Column {
-                        Text(
-                            text = "${selectedType.displayName} Progress Trend",
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        CustomLineChart(
-                            points = trendPoints,
-                            unitSuffix = selectedType.getUnit(isMetric)
-                        )
+            // Body Screen Content
+            if (currentTab == BodyScreenTab.BMI_CALCULATOR) {
+                BmiCalculatorView(
+                    userHeightCm = userHeightCm,
+                    latestWeightKg = latestWeightKg,
+                    initialUnitIsMetric = isMetric,
+                    onHeightChanged = { viewModel.updateHeight(it) },
+                    onSaveWeight = { kg, notes ->
+                        viewModel.saveMeasurement(MeasurementType.WEIGHT, kg, notes)
+                    }
+                )
+            } else {
+                // Measurements Tab
+                // Measurement Type Horizontal Chips
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(bottom = 12.dp)
+                ) {
+                    items(MeasurementType.entries) { type ->
+                        val isSel = selectedType == type
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(if (isSel) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
+                                .border(1.dp, if (isSel) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
+                                .clickable { viewModel.selectMeasurementType(type) }
+                                .padding(horizontal = 12.dp, vertical = 6.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = type.displayName,
+                                color = if (isSel) ElectricLimeText else MaterialTheme.colorScheme.onSurface,
+                                fontSize = 12.sp,
+                                fontWeight = if (isSel) FontWeight.Bold else FontWeight.Medium
+                            )
+                        }
                     }
                 }
 
-                // Logs Header
-                item {
-                    Text(
-                        text = "History Logs (${measurements.size})",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                    contentPadding = PaddingValues(bottom = 80.dp)
+                ) {
+                    // Latest Stat Card
+                    item {
+                        StatCard(
+                            title = "Latest ${selectedType.displayName}",
+                            value = latestDisplay,
+                            icon = Icons.Default.MonitorWeight,
+                            iconTint = MaterialTheme.colorScheme.primary,
+                            subtitle = latest?.let { "Recorded on ${SimpleDateFormat("MMM d, yyyy", Locale.US).format(Date(it.recordedEpochMs))}" }
+                        )
+                    }
 
-                // Measurement Rows
-                items(measurements.sortedByDescending { it.recordedEpochMs }, key = { it.id }) { item ->
-                    MeasurementRow(
-                        item = item,
-                        type = selectedType,
-                        isMetric = isMetric,
-                        onDelete = { viewModel.deleteMeasurement(item) }
-                    )
+                    // Quick BMI Glance Card (when viewing Body Weight)
+                    if (selectedType == MeasurementType.WEIGHT && latestWeightKg != null && latestWeightKg > 0.0) {
+                        item {
+                            val currentBmi = BmiCalculator.calculateBmi(latestWeightKg, userHeightCm.toDouble())
+                            val cat = BmiCategory.fromBmi(currentBmi)
+                            val catColor = Color(cat.colorHex)
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
+                                    .clickable { currentTab = BodyScreenTab.BMI_CALCULATOR }
+                                    .padding(14.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(38.dp)
+                                                .clip(CircleShape)
+                                                .background(catColor.copy(alpha = 0.15f)),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Calculate,
+                                                contentDescription = null,
+                                                tint = catColor,
+                                                modifier = Modifier.size(20.dp)
+                                            )
+                                        }
+                                        Spacer(modifier = Modifier.width(12.dp))
+                                        Column {
+                                            Text(
+                                                text = "Current BMI: ${String.format("%.1f", currentBmi)} • ${cat.label}",
+                                                fontSize = 13.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                            Text(
+                                                text = "Based on latest weight & ${String.format("%.0f", userHeightCm)} cm",
+                                                fontSize = 11.sp,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+
+                                    Text(
+                                        text = "Calculate →",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    // Trend Curve
+                    item {
+                        Column {
+                            Text(
+                                text = "${selectedType.displayName} Progress Trend",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            CustomLineChart(
+                                points = trendPoints,
+                                unitSuffix = selectedType.getUnit(isMetric)
+                            )
+                        }
+                    }
+
+                    // Logs Header
+                    item {
+                        Text(
+                            text = "History Logs (${measurements.size})",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    // Measurement Rows
+                    items(measurements.sortedByDescending { it.recordedEpochMs }, key = { it.id }) { item ->
+                        MeasurementRow(
+                            item = item,
+                            type = selectedType,
+                            isMetric = isMetric,
+                            onDelete = { viewModel.deleteMeasurement(item) }
+                        )
+                    }
                 }
             }
         }

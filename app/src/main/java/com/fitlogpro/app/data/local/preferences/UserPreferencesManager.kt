@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -25,6 +26,7 @@ class UserPreferencesManager(private val context: Context) {
         val KEY_DEFAULT_REST_SECONDS = intPreferencesKey("pref_default_rest_seconds")
         val KEY_REST_VIBRATION = booleanPreferencesKey("pref_rest_vibration")
         val KEY_REST_SOUND = booleanPreferencesKey("pref_rest_sound")
+        val KEY_USER_HEIGHT_CM = floatPreferencesKey("pref_user_height_cm")
     }
 
     val weightUnitFlow: Flow<WeightUnit> = context.dataStore.data.map { prefs ->
@@ -57,6 +59,10 @@ class UserPreferencesManager(private val context: Context) {
         prefs[KEY_REST_SOUND] ?: true
     }
 
+    val userHeightCmFlow: Flow<Float> = context.dataStore.data.map { prefs ->
+        prefs[KEY_USER_HEIGHT_CM] ?: 175.0f
+    }
+
     suspend fun setWeightUnit(unit: WeightUnit) {
         context.dataStore.edit { it[KEY_WEIGHT_UNIT] = unit.name }
     }
@@ -83,5 +89,9 @@ class UserPreferencesManager(private val context: Context) {
 
     suspend fun setRestSound(enabled: Boolean) {
         context.dataStore.edit { it[KEY_REST_SOUND] = enabled }
+    }
+
+    suspend fun setUserHeightCm(height: Float) {
+        context.dataStore.edit { it[KEY_USER_HEIGHT_CM] = height }
     }
 }

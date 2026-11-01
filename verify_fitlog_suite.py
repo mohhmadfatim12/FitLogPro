@@ -47,6 +47,32 @@ def kg_to_lbs(kg):
 def lbs_to_kg(lbs):
     return round_decimals(lbs * 0.45359237, 1) if lbs > 0 else 0.0
 
+def calculate_bmi(weight_kg, height_cm):
+    if weight_kg <= 0.0 or height_cm <= 0.0:
+        return 0.0
+    h_m = height_cm / 100.0
+    return round_decimals(weight_kg / (h_m * h_m), 1)
+
+def calculate_bmi_imperial(weight_lbs, height_inches):
+    if weight_lbs <= 0.0 or height_inches <= 0.0:
+        return 0.0
+    return round_decimals((weight_lbs * 703.0) / (height_inches * height_inches), 1)
+
+def get_bmi_category(bmi):
+    if bmi < 18.5:
+        return "UNDERWEIGHT"
+    if bmi < 25.0:
+        return "NORMAL"
+    if bmi < 30.0:
+        return "OVERWEIGHT"
+    return "OBESE"
+
+def healthy_weight_range_kg(height_cm):
+    if height_cm <= 0.0:
+        return (0.0, 0.0)
+    h_m = height_cm / 100.0
+    return (round_decimals(18.5 * h_m * h_m, 1), round_decimals(24.9 * h_m * h_m, 1))
+
 def run_tests():
     passed = 0
     total = 0
@@ -206,6 +232,20 @@ def run_tests():
     for d in docs:
         exists = os.path.isfile(d)
         assert_eq(exists, True, f"Documentation file exists: {d}")
+
+    # Round 13: BMI Calculator & WHO Classification Verification
+    print("\nRound 13: BMI Calculator & WHO Classification")
+    assert_eq(calculate_bmi(70.0, 175.0), 22.9, "70kg at 175cm evaluates to BMI 22.9")
+    assert_eq(get_bmi_category(22.9), "NORMAL", "BMI 22.9 classified as NORMAL weight")
+    assert_eq(calculate_bmi(50.0, 175.0), 16.3, "50kg at 175cm evaluates to BMI 16.3")
+    assert_eq(get_bmi_category(16.3), "UNDERWEIGHT", "BMI 16.3 classified as UNDERWEIGHT")
+    assert_eq(calculate_bmi(85.0, 175.0), 27.8, "85kg at 175cm evaluates to BMI 27.8")
+    assert_eq(get_bmi_category(27.8), "OVERWEIGHT", "BMI 27.8 classified as OVERWEIGHT")
+    assert_eq(calculate_bmi(100.0, 175.0), 32.7, "100kg at 175cm evaluates to BMI 32.7")
+    assert_eq(get_bmi_category(32.7), "OBESE", "BMI 32.7 classified as OBESE")
+    assert_eq(calculate_bmi_imperial(154.0, 69.0), 22.7, "154lbs at 69in evaluates to BMI 22.7")
+    assert_eq(healthy_weight_range_kg(180.0), (59.9, 80.7), "180cm healthy weight bounds (59.9kg - 80.7kg)")
+    assert_eq(calculate_bmi(0.0, 175.0) == 0.0 and calculate_bmi(70.0, 0.0) == 0.0, True, "Zero values safely return 0.0 BMI")
 
     print("\n============================================================")
     print(f"  🏆 ALL {passed}/{total} VERIFICATION CHECKS PASSED SUCCESSFULLY!")
