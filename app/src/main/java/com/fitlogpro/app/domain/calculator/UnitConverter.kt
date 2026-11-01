@@ -73,6 +73,16 @@ object UnitConverter {
         }
     }
 
+    /**
+     * Converts user-inputted distance to standard base storage (always in km).
+     */
+    fun storageDistance(inputDistance: Double, inputUnit: DistanceUnit): Double {
+        return when (inputUnit) {
+            DistanceUnit.KM -> roundToDecimals(inputDistance, 2)
+            DistanceUnit.MILES -> milesToKm(inputDistance)
+        }
+    }
+
     private fun roundToDecimals(value: Double, decimals: Int): Double {
         var multiplier = 1.0
         repeat(decimals) { multiplier *= 10.0 }

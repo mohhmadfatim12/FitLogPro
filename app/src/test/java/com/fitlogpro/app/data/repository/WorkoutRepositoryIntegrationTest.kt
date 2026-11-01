@@ -133,7 +133,7 @@ class WorkoutRepositoryIntegrationTest {
             exerciseName = "Barbell Bench Press",
             muscleGroup = MuscleGroup.CHEST,
             equipment = Equipment.BARBELL,
-            exerciseType = ExerciseType.WEIGHT_REPS,
+            exerciseType = ExerciseType.WEIGHT_AND_REPS,
             sets = listOf(
                 LiveWorkoutSet(id = "s-1", setNumber = 1, setType = SetType.WARMUP, weightKg = 60.0, reps = 12, isCompleted = true),
                 LiveWorkoutSet(id = "s-2", setNumber = 2, setType = SetType.NORMAL, weightKg = 100.0, reps = 8, isCompleted = true, isPr = true, prTypes = listOf(PRType.HEAVIEST_WEIGHT, PRType.BEST_1RM)),
