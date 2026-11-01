@@ -1,12 +1,20 @@
 package com.fitlogpro.app.data.repository
 
+import com.fitlogpro.app.data.local.dao.ExerciseHistoryRow
 import com.fitlogpro.app.data.local.dao.PersonalRecordDao
 import com.fitlogpro.app.data.local.dao.RoutineDao
 import com.fitlogpro.app.data.local.dao.WorkoutDao
 import com.fitlogpro.app.data.local.entity.PersonalRecordEntity
+import com.fitlogpro.app.data.local.entity.RoutineEntity
+import com.fitlogpro.app.data.local.entity.RoutineExerciseCrossRef
+import com.fitlogpro.app.data.local.entity.RoutineExerciseItem
+import com.fitlogpro.app.data.local.entity.RoutineWithExercises
 import com.fitlogpro.app.data.local.entity.WorkoutEntity
 import com.fitlogpro.app.data.local.entity.WorkoutExerciseEntity
 import com.fitlogpro.app.data.local.entity.WorkoutSetEntity
+import com.fitlogpro.app.data.local.entity.WorkoutWithDetails
+import com.fitlogpro.app.domain.model.Equipment
+import com.fitlogpro.app.domain.model.ExerciseType
 import com.fitlogpro.app.domain.model.LiveWorkoutExercise
 import com.fitlogpro.app.domain.model.LiveWorkoutSet
 import com.fitlogpro.app.domain.model.MuscleGroup
@@ -30,12 +38,13 @@ class WorkoutRepositoryIntegrationTest {
         private var nextSetId = 1L
 
         override fun getAllWorkouts(): Flow<List<WorkoutEntity>> = flowOf(workouts)
-        override fun getAllWorkoutsWithDetails() = flowOf(emptyList<com.fitlogpro.app.data.local.entity.WorkoutWithDetails>())
-        override fun getWorkoutWithDetails(workoutId: Long) = flowOf(null)
+        override fun getAllWorkoutsWithDetails(): Flow<List<WorkoutWithDetails>> = flowOf(emptyList())
+        override fun getWorkoutWithDetails(workoutId: Long): Flow<WorkoutWithDetails?> = flowOf(null)
         override suspend fun getWorkoutById(workoutId: Long): WorkoutEntity? = workouts.find { it.id == workoutId }
-        override fun getWorkoutsBetweenDates(startEpochMs: Long, endEpochMs: Long) = flowOf(workouts.filter { it.startTimeEpochMs in startEpochMs..endEpochMs })
+        override fun getWorkoutsBetweenDates(startEpochMs: Long, endEpochMs: Long): Flow<List<WorkoutEntity>> =
+            flowOf(workouts.filter { it.startTimeEpochMs in startEpochMs..endEpochMs })
         override suspend fun getAllWorkoutTimestamps(): List<Long> = workouts.map { it.startTimeEpochMs }
-        override fun getAllWorkoutTimestampsFlow() = flowOf(workouts.map { it.startTimeEpochMs })
+        override fun getAllWorkoutTimestampsFlow(): Flow<List<Long>> = flowOf(workouts.map { it.startTimeEpochMs })
 
         override suspend fun insertWorkout(workout: WorkoutEntity): Long {
             val id = nextWorkoutId++
@@ -43,9 +52,9 @@ class WorkoutRepositoryIntegrationTest {
             return id
         }
 
-        override suspend fun insertWorkoutExercise(exercise: WorkoutExerciseEntity): Long {
+        override suspend fun insertWorkoutExercise(workoutExercise: WorkoutExerciseEntity): Long {
             val id = nextWeId++
-            workoutExercises.add(exercise.copy(id = id))
+            workoutExercises.add(workoutExercise.copy(id = id))
             return id
         }
 
@@ -59,7 +68,7 @@ class WorkoutRepositoryIntegrationTest {
         override suspend fun deleteWorkout(workout: WorkoutEntity) {}
         override suspend fun deleteWorkoutExercises(workoutId: Long) {}
         override fun getCompletedSetsForExercise(exerciseId: Long): Flow<List<WorkoutSetEntity>> = flowOf(emptyList())
-        override suspend fun getExercisePerformanceHistory(exerciseId: Long): List<com.fitlogpro.app.data.local.dao.ExerciseHistoryRow> = emptyList()
+        override suspend fun getExercisePerformanceHistory(exerciseId: Long): List<ExerciseHistoryRow> = emptyList()
         override suspend fun getWorkoutCount(): Int = workouts.size
         override suspend fun getTotalVolumeAllTime(): Double = workouts.sumOf { it.totalVolumeKg }
         override suspend fun getTotalDurationAllTime(): Long = workouts.sumOf { it.durationSeconds }
@@ -96,20 +105,19 @@ class WorkoutRepositoryIntegrationTest {
         var lastUpdatedRoutineId: Long? = null
         var lastUpdatedTimestamp: Long? = null
 
-        override fun getAllRoutines() = flowOf(emptyList<com.fitlogpro.app.data.local.entity.RoutineEntity>())
-        override fun getAllRoutinesWithExercises() = flowOf(emptyList<com.fitlogpro.app.data.local.entity.RoutineWithExercises>())
-        override fun getRoutineWithExercises(routineId: Long) = flowOf(null)
-        override suspend fun getRoutineById(routineId: Long) = null
-        override suspend fun insertRoutine(routine: com.fitlogpro.app.data.local.entity.RoutineEntity) = 1L
-        override suspend fun insertRoutineExerciseCrossRef(crossRef: com.fitlogpro.app.data.local.entity.RoutineExerciseCrossRef) {}
-        override suspend fun insertRoutineExerciseCrossRefs(crossRefs: List<com.fitlogpro.app.data.local.entity.RoutineExerciseCrossRef>) {}
-        override suspend fun updateRoutine(routine: com.fitlogpro.app.data.local.entity.RoutineEntity) {}
-        override suspend fun updateLastPerformed(routineId: Long, timestampEpochMs: Long) {
+        override fun getAllRoutines(): Flow<List<RoutineEntity>> = flowOf(emptyList())
+        override suspend fun getRoutineById(id: Long): RoutineEntity? = null
+        override fun getRoutineWithExercises(id: Long): Flow<RoutineWithExercises?> = flowOf(null)
+        override fun getRoutineExerciseItems(routineId: Long): Flow<List<RoutineExerciseItem>> = flowOf(emptyList())
+        override suspend fun insertRoutine(routine: RoutineEntity): Long = 1L
+        override suspend fun updateRoutine(routine: RoutineEntity) {}
+        override suspend fun deleteRoutine(routine: RoutineEntity) {}
+        override suspend fun insertRoutineExercises(crossRefs: List<RoutineExerciseCrossRef>) {}
+        override suspend fun deleteRoutineExercises(routineId: Long) {}
+        override suspend fun updateLastPerformed(routineId: Long, timestampMs: Long) {
             lastUpdatedRoutineId = routineId
-            lastUpdatedTimestamp = timestampEpochMs
+            lastUpdatedTimestamp = timestampMs
         }
-        override suspend fun deleteRoutine(routine: com.fitlogpro.app.data.local.entity.RoutineEntity) {}
-        override suspend fun deleteRoutineExerciseCrossRefs(routineId: Long) {}
     }
 
     @Test
@@ -120,14 +128,17 @@ class WorkoutRepositoryIntegrationTest {
         val repository = WorkoutRepository(workoutDao, prDao, routineDao)
 
         val exercise = LiveWorkoutExercise(
-            exerciseId = 10,
+            id = "ex-1",
+            exerciseId = 10L,
             exerciseName = "Barbell Bench Press",
             muscleGroup = MuscleGroup.CHEST,
+            equipment = Equipment.BARBELL,
+            exerciseType = ExerciseType.WEIGHT_REPS,
             sets = listOf(
-                LiveWorkoutSet(1, SetType.WARMUP, weightKg = 60.0, reps = 12, isCompleted = true),
-                LiveWorkoutSet(2, SetType.NORMAL, weightKg = 100.0, reps = 8, isCompleted = true, isPr = true, prTypes = listOf(PRType.HEAVIEST_WEIGHT, PRType.BEST_1RM)),
-                LiveWorkoutSet(3, SetType.NORMAL, weightKg = 100.0, reps = 8, isCompleted = true),
-                LiveWorkoutSet(4, SetType.NORMAL, weightKg = 100.0, reps = 8, isCompleted = false) // uncompleted
+                LiveWorkoutSet(id = "s-1", setNumber = 1, setType = SetType.WARMUP, weightKg = 60.0, reps = 12, isCompleted = true),
+                LiveWorkoutSet(id = "s-2", setNumber = 2, setType = SetType.NORMAL, weightKg = 100.0, reps = 8, isCompleted = true, isPr = true, prTypes = listOf(PRType.HEAVIEST_WEIGHT, PRType.BEST_1RM)),
+                LiveWorkoutSet(id = "s-3", setNumber = 3, setType = SetType.NORMAL, weightKg = 100.0, reps = 8, isCompleted = true),
+                LiveWorkoutSet(id = "s-4", setNumber = 4, setType = SetType.NORMAL, weightKg = 100.0, reps = 8, isCompleted = false) // uncompleted
             )
         )
 

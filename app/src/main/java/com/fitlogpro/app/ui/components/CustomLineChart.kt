@@ -60,113 +60,107 @@ fun CustomLineChart(
                 fontSize = 13.sp,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
-            return@Box
-        }
+        } else {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val width = size.width
+                val height = size.height
+                val bottomPadding = 30f
+                val topPadding = 20f
+                val graphHeight = height - bottomPadding - topPadding
 
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val width = size.width
-            val height = size.height
-            val bottomPadding = 30f
-            val topPadding = 20f
-            val graphHeight = height - bottomPadding - topPadding
+                val rawMin = points.minOf { it.value }
+                val rawMax = points.maxOf { it.value }
 
-            val rawMin = points.minOf { it.value }
-            val rawMax = points.maxOf { it.value }
+                // Guard against identical min and max to prevent divide-by-zero
+                val minVal = if (rawMin == rawMax) max(0.0, rawMin - 10.0) else rawMin * 0.9
+                val maxVal = if (rawMin == rawMax) rawMax + 10.0 else rawMax * 1.1
+                val valueRange = maxVal - minVal
 
-            // Guard against identical min and max to prevent divide-by-zero
-            val minVal = if (rawMin == rawMax) max(0.0, rawMin - 10.0) else rawMin * 0.9
-            val maxVal = if (rawMin == rawMax) rawMax + 10.0 else rawMax * 1.1
-            val valueRange = maxVal - minVal
+                val stepX = if (points.size > 1) width / (points.size - 1) else width / 2
 
-            val stepX = if (points.size > 1) width / (points.size - 1) else width / 2
-
-            // Draw horizontal subtle grid lines (3 levels)
-            for (i in 0..2) {
-                val gridY = topPadding + (graphHeight / 2f) * i
-                drawLine(
-                    color = outlineColor,
-                    start = Offset(0f, gridY),
-                    end = Offset(width, gridY),
-                    strokeWidth = 1f
-                )
-            }
-
-            val path = Path()
-            val fillPath = Path()
-            val offsets = mutableListOf<Offset>()
-
-            points.forEachIndexed { index, point ->
-                val x = if (points.size > 1) index * stepX else width / 2
-                val normalizedY = ((point.value - minVal) / valueRange).toFloat()
-                val y = topPadding + (graphHeight * (1f - normalizedY))
-                val offset = Offset(x, y)
-                offsets.add(offset)
-
-                if (index == 0) {
-                    path.moveTo(x, y)
-                    fillPath.moveTo(x, height - bottomPadding)
-                    fillPath.lineTo(x, y)
-                } else {
-                    val prevOffset = offsets[index - 1]
-                    val controlX = (prevOffset.x + x) / 2
-                    path.cubicTo(controlX, prevOffset.y, controlX, y, x, y)
-                    fillPath.cubicTo(controlX, prevOffset.y, controlX, y, x, y)
+                // Draw horizontal subtle grid lines (3 levels)
+                for (i in 0..2) {
+                    val gridY = topPadding + (graphHeight / 2f) * i
+                    drawLine(
+                        color = outlineColor.copy(alpha = 0.5f),
+                        start = Offset(0f, gridY),
+                        end = Offset(width, gridY),
+                        strokeWidth = 1.dp.toPx()
+                    )
                 }
 
-                if (index == points.size - 1) {
-                    fillPath.lineTo(x, height - bottomPadding)
-                    fillPath.close()
+                // Compute point coordinates
+                val offsets = points.mapIndexed { idx, point ->
+                    val x = if (points.size > 1) idx * stepX else width / 2
+                    val normalizedY = if (valueRange > 0.0) {
+                        ((point.value - minVal) / valueRange).toFloat()
+                    } else 0.5f
+                    val y = topPadding + graphHeight * (1f - normalizedY)
+                    Offset(x, y)
                 }
-            }
 
-            // Draw gradient fill under curve
-            drawPath(
-                path = fillPath,
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        lineColor.copy(alpha = 0.35f),
-                        lineColor.copy(alpha = 0.0f)
-                    ),
-                    startY = topPadding,
-                    endY = height - bottomPadding
-                )
-            )
+                // Draw Fill Gradient under line
+                if (offsets.isNotEmpty()) {
+                    val fillPath = Path().apply {
+                        moveTo(offsets.first().x, topPadding + graphHeight)
+                        offsets.forEach { lineTo(it.x, it.y) }
+                        lineTo(offsets.last().x, topPadding + graphHeight)
+                        close()
+                    }
+                    drawPath(
+                        path = fillPath,
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                lineColor.copy(alpha = 0.25f),
+                                lineColor.copy(alpha = 0.02f)
+                            ),
+                            startY = topPadding,
+                            endY = topPadding + graphHeight
+                        )
+                    )
+                }
 
-            // Draw line curve
-            drawPath(
-                path = path,
-                color = lineColor,
-                style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round)
-            )
-
-            // Draw data points
-            offsets.forEachIndexed { idx, offset ->
-                drawCircle(
+                // Draw Smooth/Connected Line
+                val linePath = Path().apply {
+                    offsets.forEachIndexed { idx, offset ->
+                        if (idx == 0) moveTo(offset.x, offset.y) else lineTo(offset.x, offset.y)
+                    }
+                }
+                drawPath(
+                    path = linePath,
                     color = lineColor,
-                    radius = 5.dp.toPx(),
-                    center = offset
-                )
-                drawCircle(
-                    color = surfaceColor,
-                    radius = 2.5.dp.toPx(),
-                    center = offset
+                    style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round)
                 )
 
-                // Draw X-axis label for first, middle, last points
-                if (idx == 0 || idx == points.size - 1 || idx == points.size / 2) {
-                    drawContext.canvas.nativeCanvas.apply {
-                        val text = points[idx].label
-                        val paint = android.graphics.Paint().apply {
-                            color = android.graphics.Color.GRAY
-                            textSize = 28f
-                            textAlign = when (idx) {
-                                0 -> android.graphics.Paint.Align.LEFT
-                                points.size - 1 -> android.graphics.Paint.Align.RIGHT
-                                else -> android.graphics.Paint.Align.CENTER
+                // Draw Data Point Dots & Labels
+                offsets.forEachIndexed { idx, offset ->
+                    drawCircle(
+                        color = lineColor,
+                        radius = 4.5.dp.toPx(),
+                        center = offset
+                    )
+                    drawCircle(
+                        color = surfaceColor,
+                        radius = 2.5.dp.toPx(),
+                        center = offset
+                    )
+
+                    // Draw X-axis label for first, middle, last points
+                    if (idx == 0 || idx == points.size - 1 || idx == points.size / 2) {
+                        drawContext.canvas.nativeCanvas.apply {
+                            val text = points[idx].label
+                            val paint = android.graphics.Paint().apply {
+                                color = android.graphics.Color.GRAY
+                                textSize = 28f
+                                textAlign = when (idx) {
+                                    0 -> android.graphics.Paint.Align.LEFT
+                                    points.size - 1 -> android.graphics.Paint.Align.RIGHT
+                                    else -> android.graphics.Paint.Align.CENTER
+                                }
+                                isAntiAlias = true
                             }
-                            isAntiAlias = true
+                            drawText(text, offset.x, height - 5f, paint)
                         }
-                        drawText(text, offset.x, height - 5f, paint)
                     }
                 }
             }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,29 +22,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fitlogpro.app.ui.theme.AccentTeal
+import com.fitlogpro.app.ui.theme.PrimaryBlue
 import kotlin.math.max
 
 data class BarChartItem(
     val label: String,
-    val value: Double,
-    val subtext: String? = null
+    val value: Double
 )
 
 @Composable
 fun CustomBarChart(
     items: List<BarChartItem>,
-    barColor: Color = AccentTeal,
+    barColor: Color = PrimaryBlue,
     modifier: Modifier = Modifier
 ) {
-    val surfaceColor = androidx.compose.material3.MaterialTheme.colorScheme.surface
-    val outlineColor = androidx.compose.material3.MaterialTheme.colorScheme.outline
-    val textMuted = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+    val surfaceColor = MaterialTheme.colorScheme.surface
+    val outlineColor = MaterialTheme.colorScheme.outline
+    val textMuted = MaterialTheme.colorScheme.onSurfaceVariant
 
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(180.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(surfaceColor)
             .border(1.dp, outlineColor, RoundedCornerShape(12.dp))
@@ -57,44 +57,43 @@ fun CustomBarChart(
                 fontSize = 13.sp,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
-            return@Box
-        }
+        } else {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val width = size.width
+                val height = size.height
+                val bottomPadding = 32f
+                val topPadding = 20f
+                val availableHeight = height - bottomPadding - topPadding
 
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val width = size.width
-            val height = size.height
-            val bottomPadding = 32f
-            val topPadding = 20f
-            val availableHeight = height - bottomPadding - topPadding
+                val maxValue = max(1.0, items.maxOf { it.value })
+                val barCount = items.size
+                val barSpacing = width * 0.05f
+                val totalSpacing = barSpacing * (barCount + 1)
+                val barWidth = (width - totalSpacing) / barCount
 
-            val maxValue = max(1.0, items.maxOf { it.value })
-            val barCount = items.size
-            val barSpacing = width * 0.05f
-            val totalSpacing = barSpacing * (barCount + 1)
-            val barWidth = (width - totalSpacing) / barCount
+                items.forEachIndexed { index, item ->
+                    val x = barSpacing + index * (barWidth + barSpacing)
+                    val barHeight = ((item.value / maxValue) * availableHeight).toFloat()
+                    val y = topPadding + (availableHeight - barHeight)
 
-            items.forEachIndexed { index, item ->
-                val x = barSpacing + index * (barWidth + barSpacing)
-                val barHeight = ((item.value / maxValue) * availableHeight).toFloat()
-                val y = topPadding + (availableHeight - barHeight)
+                    // Draw Bar with rounded top
+                    drawRoundRect(
+                        color = barColor,
+                        topLeft = Offset(x, y),
+                        size = Size(barWidth, barHeight),
+                        cornerRadius = CornerRadius(6.dp.toPx(), 6.dp.toPx())
+                    )
 
-                // Draw Bar with rounded top
-                drawRoundRect(
-                    color = barColor,
-                    topLeft = Offset(x, y),
-                    size = Size(barWidth, barHeight),
-                    cornerRadius = CornerRadius(6.dp.toPx(), 6.dp.toPx())
-                )
-
-                // Draw X-axis label
-                drawContext.canvas.nativeCanvas.apply {
-                    val paint = android.graphics.Paint().apply {
-                        color = android.graphics.Color.GRAY
-                        textSize = 26f
-                        textAlign = android.graphics.Paint.Align.CENTER
-                        isAntiAlias = true
+                    // Draw X-axis label
+                    drawContext.canvas.nativeCanvas.apply {
+                        val paint = android.graphics.Paint().apply {
+                            color = android.graphics.Color.GRAY
+                            textSize = 26f
+                            textAlign = android.graphics.Paint.Align.CENTER
+                            isAntiAlias = true
+                        }
+                        drawText(item.label, x + barWidth / 2f, height - 6f, paint)
                     }
-                    drawText(item.label, x + barWidth / 2f, height - 6f, paint)
                 }
             }
         }
