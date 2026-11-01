@@ -41,6 +41,9 @@ class ActiveWorkoutViewModel(
     private val _sessionState = MutableStateFlow<ActiveWorkoutSession?>(null)
     val sessionState: StateFlow<ActiveWorkoutSession?> = _sessionState.asStateFlow()
 
+    private val _elapsedSeconds = MutableStateFlow(0L)
+    val elapsedSeconds: StateFlow<Long> = _elapsedSeconds.asStateFlow()
+
     private val _restTimerState = MutableStateFlow(restTimerManager.getSnapshot())
     val restTimerState: StateFlow<RestTimerSnapshot> = _restTimerState.asStateFlow()
 
@@ -61,6 +64,7 @@ class ActiveWorkoutViewModel(
         viewModelScope.launch {
             val savedSession = activeWorkoutRepository.getActiveSession()
             if (savedSession != null) {
+                _elapsedSeconds.value = savedSession.elapsedSeconds
                 _sessionState.value = savedSession
                 startElapsedTimer()
             }
@@ -70,6 +74,7 @@ class ActiveWorkoutViewModel(
 
     fun startBlankWorkout(customName: String = "Workout") {
         val now = System.currentTimeMillis()
+        _elapsedSeconds.value = 0L
         val newSession = ActiveWorkoutSession(
             sessionId = "CURRENT_ACTIVE_SESSION",
             routineId = null,
@@ -89,6 +94,7 @@ class ActiveWorkoutViewModel(
             val routineName = routine?.name ?: "Workout"
             val items = routineRepository.getRoutineExerciseItems(routineId).first()
             val now = System.currentTimeMillis()
+            _elapsedSeconds.value = 0L
 
             val liveExercises = items.sortedBy { it.crossRef.orderIndex }.map { item ->
                 val prevPerf = loadPreviousPerformance(item.exercise.id)
@@ -285,6 +291,7 @@ class ActiveWorkoutViewModel(
         val isPaused = !current.isPaused
         val updated = current.copy(
             isPaused = isPaused,
+            elapsedSeconds = _elapsedSeconds.value,
             lastPauseTimestampMs = if (isPaused) System.currentTimeMillis() else null
         )
         updateSession(updated)
@@ -297,6 +304,7 @@ class ActiveWorkoutViewModel(
 
     fun finishWorkout(onFinished: (Long) -> Unit) {
         val current = _sessionState.value ?: return
+        val finalDuration = _elapsedSeconds.value
         viewModelScope.launch {
             val endTime = System.currentTimeMillis()
             val workoutId = workoutRepository.saveCompletedWorkout(
@@ -304,7 +312,7 @@ class ActiveWorkoutViewModel(
                 routineId = current.routineId,
                 startTimeEpochMs = current.startTimeEpochMs,
                 endTimeEpochMs = endTime,
-                durationSeconds = current.elapsedSeconds,
+                durationSeconds = finalDuration,
                 workoutNotes = current.workoutNotes,
                 exercises = current.exercises
             )
@@ -358,9 +366,10 @@ class ActiveWorkoutViewModel(
     }
 
     private fun updateSession(session: ActiveWorkoutSession) {
-        _sessionState.value = session
+        val withElapsed = session.copy(elapsedSeconds = _elapsedSeconds.value)
+        _sessionState.value = withElapsed
         viewModelScope.launch {
-            activeWorkoutRepository.saveActiveSession(session)
+            activeWorkoutRepository.saveActiveSession(withElapsed)
         }
     }
 
@@ -371,11 +380,12 @@ class ActiveWorkoutViewModel(
                 delay(1000)
                 val current = _sessionState.value ?: break
                 if (!current.isPaused) {
-                    val updated = current.copy(elapsedSeconds = current.elapsedSeconds + 1)
-                    _sessionState.value = updated
-                    // Periodic save every 5 seconds to Room
-                    if (updated.elapsedSeconds % 5 == 0L) {
-                        activeWorkoutRepository.saveActiveSession(updated)
+                    val newElapsed = _elapsedSeconds.value + 1
+                    _elapsedSeconds.value = newElapsed
+                    // Periodic save every 10 seconds to Room for crash recovery without modifying _sessionState
+                    // This prevents re-rendering all exercise cards and sets every single second!
+                    if (newElapsed % 10 == 0L) {
+                        activeWorkoutRepository.saveActiveSession(current.copy(elapsedSeconds = newElapsed))
                     }
                 }
             }
@@ -387,7 +397,10 @@ class ActiveWorkoutViewModel(
         restTimerJob = viewModelScope.launch {
             while (true) {
                 delay(500)
-                _restTimerState.value = restTimerManager.getSnapshot()
+                val snap = restTimerManager.getSnapshot()
+                if (snap != _restTimerState.value) {
+                    _restTimerState.value = snap
+                }
             }
         }
     }
@@ -440,6 +453,13 @@ class ActiveWorkoutViewModel(
         super.onCleared()
         timerJob?.cancel()
         restTimerJob?.cancel()
+        val current = _sessionState.value
+        if (current != null) {
+            val withElapsed = current.copy(elapsedSeconds = _elapsedSeconds.value)
+            viewModelScope.launch {
+                activeWorkoutRepository.saveActiveSession(withElapsed)
+            }
+        }
     }
 
     class Factory(

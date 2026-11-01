@@ -23,6 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+private val NUMERIC_INPUT_REGEX = Regex("""^\d*\.?\d*$""")
+
 @Composable
 fun GymNumberField(
     value: String,
@@ -51,8 +53,8 @@ fun GymNumberField(
             BasicTextField(
                 value = value,
                 onValueChange = { input ->
-                    // Filter numeric with optional decimal
-                    if (input.isEmpty() || input.matches(Regex("""^\d*\.?\d*$"""))) {
+                    // Filter numeric with optional decimal using precompiled regex
+                    if (input.isEmpty() || input.matches(NUMERIC_INPUT_REGEX)) {
                         onValueChange(input)
                     }
                 },

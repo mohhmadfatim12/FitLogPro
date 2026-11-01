@@ -8,7 +8,8 @@ enum class WeightUnit(val symbol: String, val displayName: String) {
         fun fromString(value: String): WeightUnit {
             return entries.find {
                 it.name.equals(value, ignoreCase = true) ||
-                it.symbol.equals(value, ignoreCase = true)
+                it.symbol.equals(value, ignoreCase = true) ||
+                it.displayName.equals(value, ignoreCase = true)
             } ?: KG
         }
     }
@@ -22,7 +23,8 @@ enum class DistanceUnit(val symbol: String, val displayName: String) {
         fun fromString(value: String): DistanceUnit {
             return entries.find {
                 it.name.equals(value, ignoreCase = true) ||
-                it.symbol.equals(value, ignoreCase = true)
+                it.symbol.equals(value, ignoreCase = true) ||
+                it.displayName.equals(value, ignoreCase = true)
             } ?: KM
         }
     }

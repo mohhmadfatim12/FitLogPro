@@ -47,6 +47,7 @@ object UnitConverter {
      * Converts a base weight stored in kg to the target unit for display.
      */
     fun displayWeight(weightInKg: Double, targetUnit: WeightUnit): Double {
+        if (weightInKg <= 0.0) return 0.0
         return when (targetUnit) {
             WeightUnit.KG -> roundToDecimals(weightInKg, 1)
             WeightUnit.LBS -> kgToLbs(weightInKg)
@@ -57,6 +58,7 @@ object UnitConverter {
      * Converts user-inputted weight to standard base storage (always in kg).
      */
     fun storageWeight(inputWeight: Double, inputUnit: WeightUnit): Double {
+        if (inputWeight <= 0.0) return 0.0
         return when (inputUnit) {
             WeightUnit.KG -> roundToDecimals(inputWeight, 1)
             WeightUnit.LBS -> lbsToKg(inputWeight)
@@ -67,6 +69,7 @@ object UnitConverter {
      * Converts a base distance stored in km to the target unit for display.
      */
     fun displayDistance(distanceInKm: Double, targetUnit: DistanceUnit): Double {
+        if (distanceInKm <= 0.0) return 0.0
         return when (targetUnit) {
             DistanceUnit.KM -> roundToDecimals(distanceInKm, 2)
             DistanceUnit.MILES -> kmToMiles(distanceInKm)
@@ -77,6 +80,7 @@ object UnitConverter {
      * Converts user-inputted distance to standard base storage (always in km).
      */
     fun storageDistance(inputDistance: Double, inputUnit: DistanceUnit): Double {
+        if (inputDistance <= 0.0) return 0.0
         return when (inputUnit) {
             DistanceUnit.KM -> roundToDecimals(inputDistance, 2)
             DistanceUnit.MILES -> milesToKm(inputDistance)

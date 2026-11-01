@@ -82,9 +82,10 @@ fun WorkoutDetailScreen(
     }
 
     val workout = workoutDetail.workout
-    val dateFormat = SimpleDateFormat("EEEE, MMMM d, yyyy • h:mm a", Locale.US)
-    val formattedDate = dateFormat.format(Date(workout.startTimeEpochMs))
-    val prCount = workoutDetail.exercises.flatMap { it.sets }.count { it.isPr }
+    val formattedDate = WORKOUT_DETAIL_DATE_FORMAT.format(Date(workout.startTimeEpochMs))
+    val prCount = remember(workoutDetail.exercises) {
+        workoutDetail.exercises.sumOf { ex -> ex.sets.count { it.isPr } }
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -296,3 +297,5 @@ private fun DetailSetRow(set: WorkoutSetEntity) {
         }
     }
 }
+
+private val WORKOUT_DETAIL_DATE_FORMAT = SimpleDateFormat("EEEE, MMMM d, yyyy • h:mm a", Locale.US)

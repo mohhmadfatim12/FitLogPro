@@ -184,16 +184,23 @@ private fun TabButton(
     }
 }
 
+private val HISTORY_DATE_FORMAT = SimpleDateFormat("EEEE, MMM d • h:mm a", Locale.US)
+
 @Composable
 private fun WorkoutHistoryCard(
     item: WorkoutWithDetails,
     onClick: () -> Unit
 ) {
     val workout = item.workout
-    val dateFormat = SimpleDateFormat("EEEE, MMM d • h:mm a", Locale.US)
-    val dateText = dateFormat.format(Date(workout.startTimeEpochMs))
+    val dateText = remember(workout.startTimeEpochMs) {
+        synchronized(HISTORY_DATE_FORMAT) {
+            HISTORY_DATE_FORMAT.format(Date(workout.startTimeEpochMs))
+        }
+    }
     val durationMin = workout.durationSeconds / 60
-    val prCount = item.exercises.flatMap { it.sets }.count { it.isPr }
+    val prCount = remember(item.exercises) {
+        item.exercises.sumOf { ex -> ex.sets.count { it.isPr } }
+    }
 
     val cardBg = MaterialTheme.colorScheme.surface
     val cardBorder = MaterialTheme.colorScheme.outline

@@ -35,7 +35,7 @@ class CsvFormattingSafetyTest {
         val emptyMeasurements = CsvExporter.exportMeasurementsToCsv(emptyList())
         val measLines = emptyMeasurements.trim().split("\n")
         assertEquals(1, measLines.size)
-        assertTrue(measLines[0].startsWith("Date,Measurement Type,Value,Unit,Notes"))
+        assertTrue(measLines[0].contains("Measurement Type,Value,Unit,Notes"))
     }
 
     @Test

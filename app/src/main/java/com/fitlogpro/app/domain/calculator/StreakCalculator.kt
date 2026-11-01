@@ -35,12 +35,13 @@ object StreakCalculator {
         // Count workouts this current calendar week
         calendar.timeInMillis = nowEpochMs
         val currentWeek = calendar.get(Calendar.WEEK_OF_YEAR)
-        val currentYear = calendar.get(Calendar.YEAR)
+        val currentWeekYear = try { calendar.weekYear } catch (e: Throwable) { calendar.get(Calendar.YEAR) }
 
         var thisWeekCount = 0
         workoutTimestampsMs.forEach { ts ->
             calendar.timeInMillis = ts
-            if (calendar.get(Calendar.YEAR) == currentYear && calendar.get(Calendar.WEEK_OF_YEAR) == currentWeek) {
+            val tsWeekYear = try { calendar.weekYear } catch (e: Throwable) { calendar.get(Calendar.YEAR) }
+            if (tsWeekYear == currentWeekYear && calendar.get(Calendar.WEEK_OF_YEAR) == currentWeek) {
                 thisWeekCount++
             }
         }
@@ -61,21 +62,22 @@ object StreakCalculator {
         // Group timestamps by year-week key
         val activeYearWeeks = workoutTimestampsMs.map { ts ->
             calendar.timeInMillis = ts
-            YearWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR))
+            val wYear = try { calendar.weekYear } catch (e: Throwable) { calendar.get(Calendar.YEAR) }
+            YearWeek(wYear, calendar.get(Calendar.WEEK_OF_YEAR))
         }.toSortedSet()
 
-        val currentYearWeek = YearWeek(currentYear, currentWeek)
+        val currentYearWeek = YearWeek(currentWeekYear, currentWeek)
         var weeklyStreak = 0
         var evalYW = currentYearWeek
 
         // If no workout yet this current week, check last week
         if (!activeYearWeeks.contains(evalYW)) {
-            evalYW = evalYW.previousWeek()
+            evalYW = evalYW.previousWeek(activeYearWeeks)
         }
 
         while (activeYearWeeks.contains(evalYW)) {
             weeklyStreak++
-            evalYW = evalYW.previousWeek()
+            evalYW = evalYW.previousWeek(activeYearWeeks)
         }
 
         // Best weekly streak
@@ -120,17 +122,19 @@ object StreakCalculator {
             }
         }
 
-        fun previousWeek(): YearWeek {
-            return if (week > 1) {
-                YearWeek(year, week - 1)
-            } else {
-                YearWeek(year - 1, 52)
+        fun previousWeek(activeWeeks: Set<YearWeek>? = null): YearWeek {
+            if (week > 1) {
+                return YearWeek(year, week - 1)
             }
+            if (activeWeeks != null && activeWeeks.contains(YearWeek(year - 1, 53))) {
+                return YearWeek(year - 1, 53)
+            }
+            return YearWeek(year - 1, 52)
         }
 
         fun isImmediatelyFollowing(prev: YearWeek): Boolean {
             return (this.year == prev.year && this.week == prev.week + 1) ||
-                    (this.year == prev.year + 1 && prev.week >= 52 && this.week == 1)
+                    (this.year == prev.year + 1 && prev.week in 52..53 && this.week == 1)
         }
     }
 }

@@ -20,7 +20,8 @@ object CsvExporter {
         distanceUnit: DistanceUnit = DistanceUnit.KM
     ): String {
         val sb = StringBuilder()
-        sb.append("Workout Date,Workout Name,Duration (min),Total Volume,Exercise,Set Number,Set Type,Weight,Weight Unit,Reps,RPE,Cardio Duration (s),Distance,Distance Unit,Is Completed,Is PR\n")
+        val unitLabel = weightUnit.symbol.lowercase()
+        sb.append("Workout Date,Workout Name,Duration (min),Total Volume ($unitLabel),Exercise,Set Number,Set Type,Weight ($unitLabel),Reps,RPE,Cardio Duration (s),Distance,Distance Unit,Is Completed,Is PR,Workout Notes\n")
 
         for (w in workouts) {
             val dateStr = dateFormat.format(Date(w.workout.startTimeEpochMs))
@@ -41,14 +42,14 @@ object CsvExporter {
                     sb.append("${s.setNumber},")
                     sb.append("\"${s.setType.displayName}\",")
                     sb.append("$weightDisplay,")
-                    sb.append("\"${weightUnit.symbol}\",")
                     sb.append("${s.reps},")
                     sb.append("${s.rpe ?: ""},")
                     sb.append("${s.durationSeconds ?: ""},")
                     sb.append("$distanceDisplay,")
                     sb.append("\"${distanceUnit.symbol}\",")
                     sb.append("${s.isCompleted},")
-                    sb.append("${s.isPr}\n")
+                    sb.append("${s.isPr},")
+                    sb.append("\"${escapeCsv(w.workout.notes)}\"\n")
                 }
             }
         }

@@ -211,6 +211,12 @@ fun CustomLineChart(
                     style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round)
                 )
 
+                val textPaint = android.graphics.Paint().apply {
+                    color = android.graphics.Color.GRAY
+                    textSize = 28f
+                    isAntiAlias = true
+                }
+
                 // Draw Data Point Dots & Labels
                 offsets.forEachIndexed { idx, offset ->
                     drawCircle(
@@ -226,20 +232,12 @@ fun CustomLineChart(
 
                     // Draw X-axis label for first, middle, last points
                     if (idx == 0 || idx == points.size - 1 || idx == points.size / 2) {
-                        drawContext.canvas.nativeCanvas.apply {
-                            val text = points[idx].label
-                            val paint = android.graphics.Paint().apply {
-                                color = android.graphics.Color.GRAY
-                                textSize = 28f
-                                textAlign = when (idx) {
-                                    0 -> android.graphics.Paint.Align.LEFT
-                                    points.size - 1 -> android.graphics.Paint.Align.RIGHT
-                                    else -> android.graphics.Paint.Align.CENTER
-                                }
-                                isAntiAlias = true
-                            }
-                            drawText(text, offset.x, height - 5f, paint)
+                        textPaint.textAlign = when (idx) {
+                            0 -> android.graphics.Paint.Align.LEFT
+                            points.size - 1 -> android.graphics.Paint.Align.RIGHT
+                            else -> android.graphics.Paint.Align.CENTER
                         }
+                        drawContext.canvas.nativeCanvas.drawText(points[idx].label, offset.x, height - 5f, textPaint)
                     }
                 }
             }

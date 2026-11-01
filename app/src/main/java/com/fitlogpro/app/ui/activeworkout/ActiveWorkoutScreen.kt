@@ -58,6 +58,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import kotlinx.coroutines.flow.StateFlow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,8 +88,6 @@ fun ActiveWorkoutScreen(
     onWorkoutFinished: (Long) -> Unit
 ) {
     val session by viewModel.sessionState.collectAsState()
-    val restTimerSnapshot by viewModel.restTimerState.collectAsState()
-    val showRestModal by viewModel.showRestTimerModal.collectAsState()
     val weightUnit by viewModel.weightUnit.collectAsState()
     val keepScreenOn by viewModel.keepScreenOn.collectAsState()
     val allExercises by exerciseRepository.getAllExercises().collectAsState(initial = emptyList())
@@ -126,10 +125,6 @@ fun ActiveWorkoutScreen(
     }
 
     val activeSession = session!!
-    val elapsedMinutes = activeSession.elapsedSeconds / 60
-    val elapsedSeconds = activeSession.elapsedSeconds % 60
-    val timerText = String.format("%02d:%02d", elapsedMinutes, elapsedSeconds)
-
     val surfaceColor = MaterialTheme.colorScheme.surface
     val textPrimary = MaterialTheme.colorScheme.onSurface
     val textSecondary = MaterialTheme.colorScheme.onSurfaceVariant
@@ -148,21 +143,10 @@ fun ActiveWorkoutScreen(
                             fontWeight = FontWeight.Bold,
                             maxLines = 1
                         )
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(
-                                modifier = Modifier
-                                    .size(7.dp)
-                                    .clip(CircleShape)
-                                    .background(if (activeSession.isPaused) AccentGold else AccentGreen)
-                            )
-                            Spacer(modifier = Modifier.width(5.dp))
-                            Text(
-                                text = if (activeSession.isPaused) "Paused • $timerText" else timerText,
-                                color = if (activeSession.isPaused) AccentGold else AccentGreen,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
+                        ActiveWorkoutTimerBadge(
+                            isPaused = activeSession.isPaused,
+                            elapsedSecondsFlow = viewModel.elapsedSeconds
+                        )
                     }
                 },
                 navigationIcon = {
@@ -226,16 +210,7 @@ fun ActiveWorkoutScreen(
             )
         },
         bottomBar = {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                RestTimerFloatingBar(
-                    snapshot = restTimerSnapshot,
-                    onPause = { viewModel.pauseRestTimer() },
-                    onResume = { viewModel.resumeRestTimer() },
-                    onAddTime = { viewModel.addRestTimerSeconds(it) },
-                    onSkip = { viewModel.skipRestTimer() },
-                    onOpenModal = { viewModel.setRestTimerModalVisible(true) }
-                )
-            }
+            ActiveWorkoutRestTimerBar(viewModel = viewModel)
         }
     ) { innerPadding ->
         LazyColumn(
@@ -295,20 +270,7 @@ fun ActiveWorkoutScreen(
     }
 
     // Rest Timer Modal Dialog
-    if (showRestModal) {
-        RestTimerDialog(
-            snapshot = restTimerSnapshot,
-            onPause = { viewModel.pauseRestTimer() },
-            onResume = { viewModel.resumeRestTimer() },
-            onAddTime = { viewModel.addRestTimerSeconds(it) },
-            onSubtractTime = { viewModel.subtractRestTimerSeconds(it) },
-            onSkip = {
-                viewModel.skipRestTimer()
-                viewModel.setRestTimerModalVisible(false)
-            },
-            onDismiss = { viewModel.setRestTimerModalVisible(false) }
-        )
-    }
+    ActiveWorkoutRestTimerDialogHost(viewModel = viewModel)
 
     // Set Type Chooser Dialog
     if (activeSetTypeChooser != null) {
@@ -681,3 +643,66 @@ private fun ActiveExercisePickerDialog(
         }
     }
 }
+
+@Composable
+private fun ActiveWorkoutTimerBadge(
+    isPaused: Boolean,
+    elapsedSecondsFlow: StateFlow<Long>
+) {
+    val elapsed by elapsedSecondsFlow.collectAsState()
+    val minutes = elapsed / 60
+    val seconds = elapsed % 60
+    val timerText = String.format("%02d:%02d", minutes, seconds)
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(7.dp)
+                .clip(CircleShape)
+                .background(if (isPaused) AccentGold else AccentGreen)
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        Text(
+            text = if (isPaused) "Paused • $timerText" else timerText,
+            color = if (isPaused) AccentGold else AccentGreen,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+@Composable
+private fun ActiveWorkoutRestTimerBar(viewModel: ActiveWorkoutViewModel) {
+    val snapshot by viewModel.restTimerState.collectAsState()
+    Column(modifier = Modifier.fillMaxWidth()) {
+        RestTimerFloatingBar(
+            snapshot = snapshot,
+            onPause = { viewModel.pauseRestTimer() },
+            onResume = { viewModel.resumeRestTimer() },
+            onAddTime = { viewModel.addRestTimerSeconds(it) },
+            onSkip = { viewModel.skipRestTimer() },
+            onOpenModal = { viewModel.setRestTimerModalVisible(true) }
+        )
+    }
+}
+
+@Composable
+private fun ActiveWorkoutRestTimerDialogHost(viewModel: ActiveWorkoutViewModel) {
+    val showRestModal by viewModel.showRestTimerModal.collectAsState()
+    if (showRestModal) {
+        val snapshot by viewModel.restTimerState.collectAsState()
+        RestTimerDialog(
+            snapshot = snapshot,
+            onPause = { viewModel.pauseRestTimer() },
+            onResume = { viewModel.resumeRestTimer() },
+            onAddTime = { viewModel.addRestTimerSeconds(it) },
+            onSubtractTime = { viewModel.subtractRestTimerSeconds(it) },
+            onSkip = {
+                viewModel.skipRestTimer()
+                viewModel.setRestTimerModalVisible(false)
+            },
+            onDismiss = { viewModel.setRestTimerModalVisible(false) }
+        )
+    }
+}
+

@@ -234,7 +234,7 @@ fun BodyMeasurementScreen(
                             value = latestDisplay,
                             icon = Icons.Default.MonitorWeight,
                             iconTint = MaterialTheme.colorScheme.primary,
-                            subtitle = latest?.let { "Recorded on ${SimpleDateFormat("MMM d, yyyy", Locale.US).format(Date(it.recordedEpochMs))}" }
+                            subtitle = latest?.let { "Recorded on ${MEASUREMENT_DAY_FORMAT.format(Date(it.recordedEpochMs))}" }
                         )
                     }
 
@@ -329,7 +329,10 @@ fun BodyMeasurementScreen(
                     }
 
                     // Measurement Rows
-                    items(measurements.sortedByDescending { it.recordedEpochMs }, key = { it.id }) { item ->
+                    val sortedMeasurements = remember(measurements) {
+                        measurements.sortedByDescending { it.recordedEpochMs }
+                    }
+                    items(sortedMeasurements, key = { it.id }) { item ->
                         MeasurementRow(
                             item = item,
                             type = selectedType,
@@ -355,6 +358,9 @@ fun BodyMeasurementScreen(
     }
 }
 
+private val MEASUREMENT_DATE_FORMAT = SimpleDateFormat("MMM d, yyyy • h:mm a", Locale.US)
+private val MEASUREMENT_DAY_FORMAT = SimpleDateFormat("MMM d, yyyy", Locale.US)
+
 @Composable
 private fun MeasurementRow(
     item: BodyMeasurementEntity,
@@ -362,7 +368,11 @@ private fun MeasurementRow(
     isMetric: Boolean,
     onDelete: () -> Unit
 ) {
-    val dateFormat = SimpleDateFormat("MMM d, yyyy • h:mm a", Locale.US)
+    val dateText = remember(item.recordedEpochMs) {
+        synchronized(MEASUREMENT_DATE_FORMAT) {
+            MEASUREMENT_DATE_FORMAT.format(Date(item.recordedEpochMs))
+        }
+    }
     val displayVal = if (isMetric) item.value else {
         when (type) {
             MeasurementType.WEIGHT -> UnitConverter.kgToLbs(item.value)

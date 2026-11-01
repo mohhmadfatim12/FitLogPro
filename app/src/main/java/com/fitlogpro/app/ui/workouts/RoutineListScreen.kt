@@ -477,9 +477,8 @@ private fun RoutineCard(
     onCardClick: () -> Unit,
     onStart: () -> Unit
 ) {
-    val dateFormat = SimpleDateFormat("MMM d", Locale.US)
     val lastDoneText = routine.lastPerformedEpochMs?.let {
-        "Last: ${dateFormat.format(Date(it))}"
+        "Last: ${ROUTINE_DATE_FORMAT.format(Date(it))}"
     } ?: "New Routine"
 
     val cardBg = MaterialTheme.colorScheme.surface
@@ -571,3 +570,5 @@ private fun RoutineCard(
         }
     }
 }
+
+private val ROUTINE_DATE_FORMAT = SimpleDateFormat("MMM d", Locale.US)

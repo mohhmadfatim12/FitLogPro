@@ -71,6 +71,13 @@ fun CustomBarChart(
                     val totalSpacing = barSpacing * (barCount + 1)
                     val barWidth = (width - totalSpacing) / barCount
 
+                    val textPaint = android.graphics.Paint().apply {
+                        color = android.graphics.Color.LTGRAY
+                        textSize = 24f
+                        textAlign = android.graphics.Paint.Align.CENTER
+                        isAntiAlias = true
+                    }
+
                     previewFractions.forEachIndexed { index, fraction ->
                         val x = barSpacing + index * (barWidth + barSpacing)
                         val barHeight = availableHeight * fraction
@@ -81,15 +88,7 @@ fun CustomBarChart(
                             size = Size(barWidth, barHeight),
                             cornerRadius = CornerRadius(6.dp.toPx(), 6.dp.toPx())
                         )
-                        drawContext.canvas.nativeCanvas.apply {
-                            val paint = android.graphics.Paint().apply {
-                                color = android.graphics.Color.LTGRAY
-                                textSize = 24f
-                                textAlign = android.graphics.Paint.Align.CENTER
-                                isAntiAlias = true
-                            }
-                            drawText(days[index], x + barWidth / 2f, height - 6f, paint)
-                        }
+                        drawContext.canvas.nativeCanvas.drawText(days[index], x + barWidth / 2f, height - 6f, textPaint)
                     }
                 }
 
@@ -148,6 +147,13 @@ fun CustomBarChart(
                 val totalSpacing = barSpacing * (barCount + 1)
                 val barWidth = (width - totalSpacing) / barCount
 
+                val textPaint = android.graphics.Paint().apply {
+                    color = android.graphics.Color.GRAY
+                    textSize = 26f
+                    textAlign = android.graphics.Paint.Align.CENTER
+                    isAntiAlias = true
+                }
+
                 items.forEachIndexed { index, item ->
                     val x = barSpacing + index * (barWidth + barSpacing)
                     val barHeight = ((item.value / maxValue) * availableHeight).toFloat()
@@ -162,15 +168,7 @@ fun CustomBarChart(
                     )
 
                     // Draw X-axis label
-                    drawContext.canvas.nativeCanvas.apply {
-                        val paint = android.graphics.Paint().apply {
-                            color = android.graphics.Color.GRAY
-                            textSize = 26f
-                            textAlign = android.graphics.Paint.Align.CENTER
-                            isAntiAlias = true
-                        }
-                        drawText(item.label, x + barWidth / 2f, height - 6f, paint)
-                    }
+                    drawContext.canvas.nativeCanvas.drawText(item.label, x + barWidth / 2f, height - 6f, textPaint)
                 }
             }
         }
