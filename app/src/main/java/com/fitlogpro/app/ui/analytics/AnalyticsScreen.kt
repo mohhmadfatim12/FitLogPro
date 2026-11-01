@@ -43,7 +43,10 @@ import androidx.compose.ui.unit.sp
 import com.fitlogpro.app.ui.components.CustomBarChart
 import com.fitlogpro.app.ui.components.CustomLineChart
 import com.fitlogpro.app.ui.components.MuscleDistributionChart
+import com.fitlogpro.app.ui.components.MuscleRecoveryHeatmap
 import com.fitlogpro.app.ui.components.StatCard
+import com.fitlogpro.app.ui.theme.ElectricLime
+import com.fitlogpro.app.ui.theme.ElectricLimeText
 import com.fitlogpro.app.ui.theme.PrimaryBlue
 
 @Composable
@@ -53,10 +56,13 @@ fun AnalyticsScreen(
     val streakInfo by viewModel.streakInfo.collectAsState()
     val weeklyVolumeBars by viewModel.weeklyVolumeBars.collectAsState()
     val muscleDistribution by viewModel.muscleDistribution.collectAsState()
+    val recoveryList by viewModel.muscleRecoveryList.collectAsState()
+    val dailyReadiness by viewModel.dailyReadiness.collectAsState()
     val allExercises by viewModel.allExercises.collectAsState()
     val selectedExId by viewModel.selectedExerciseId.collectAsState()
     val selectedMetric by viewModel.selectedMetric.collectAsState()
 
+    var selectedTab by remember { mutableStateOf(0) }
     var showExerciseMenu by remember { mutableStateOf(false) }
     val selectedExercise = allExercises.find { it.id == selectedExId }
     val chartPoints = viewModel.getChartDataPoints()
@@ -75,21 +81,64 @@ fun AnalyticsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(18.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Header
             item {
                 Text(
-                    text = "Analytics & Performance",
+                    text = "Analytics & Intelligence",
                     color = textPrimary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
 
-            // Streak & Volume Highlights
+            // Segmented Tab Switcher: Recovery vs Volume vs Strength
             item {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .padding(3.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    val tabs = listOf("Recovery", "Volume", "Strength")
+                    tabs.forEachIndexed { idx, title ->
+                        val isSel = selectedTab == idx
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(9.dp))
+                                .background(if (isSel) ElectricLime else Color.Transparent)
+                                .clickable { selectedTab = idx }
+                                .padding(vertical = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = title,
+                                color = if (isSel) ElectricLimeText else textSecondary,
+                                fontSize = 12.sp,
+                                fontWeight = if (isSel) FontWeight.Bold else FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+            }
+
+            if (selectedTab == 0) {
+                // Tab 0: Muscle Recovery & Readiness Intelligence
+                item {
+                    MuscleRecoveryHeatmap(
+                        readiness = dailyReadiness,
+                        recoveryList = recoveryList
+                    )
+                }
+            } else if (selectedTab == 1) {
+                // Tab 1: Volume & Body Balance
+                // Streak & Volume Highlights
+                item {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     StatCard(
                         title = "Streak",
                         value = "${streakInfo.currentStreakWeeks} wks",
@@ -135,8 +184,9 @@ fun AnalyticsScreen(
                 MuscleDistributionChart(distributions = muscleDistribution)
             }
 
-            // Exercise Progression Section
-            item {
+            } else {
+                // Tab 2: Strength Curves & Exercise Progression
+                item {
                 Column {
                     Row(
                         modifier = Modifier.fillMaxWidth(),

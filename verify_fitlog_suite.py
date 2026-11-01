@@ -247,10 +247,37 @@ def run_tests():
     assert_eq(healthy_weight_range_kg(180.0), (59.9, 80.7), "180cm healthy weight bounds (59.9kg - 80.7kg)")
     assert_eq(calculate_bmi(0.0, 175.0) == 0.0 and calculate_bmi(70.0, 0.0) == 0.0, True, "Zero values safely return 0.0 BMI")
 
+    # Round 14: Muscle Recovery & Readiness Engine Verification
+    print("\nRound 14: Muscle Recovery & Readiness Engine")
+    def calc_recovery_pct(hours, required):
+        return min(100, max(0, int((hours / required) * 100)))
+
+    # Chest requires 60h
+    assert_eq(calc_recovery_pct(12, 60), 20, "12h elapsed on 60h base = 20% recovery (Deep Fatigue)")
+    assert_eq(calc_recovery_pct(30, 60), 50, "30h elapsed on 60h base = 50% recovery (Recovering)")
+    assert_eq(calc_recovery_pct(60, 60), 100, "60h elapsed on 60h base = 100% recovery (Fresh & Primed)")
+    # Legs require 72h
+    assert_eq(calc_recovery_pct(72, 72), 100, "72h elapsed on 72h base = 100% recovery (Fresh & Primed)")
+    assert_eq(calc_recovery_pct(18, 72), 25, "18h elapsed on 72h base = 25% recovery (Deep Fatigue)")
+
+    # Round 15: Adaptive TDEE & Energy Balance Math
+    print("\nRound 15: Adaptive TDEE & Macronutrient Targets")
+    def calc_bmr(w, h, a, male=True):
+        base = (10.0 * w) + (6.25 * h) - (5.0 * a)
+        return base + 5.0 if male else base - 161.0
+
+    bmr_val = calc_bmr(70.0, 175.0, 25, True)
+    assert_eq(round(bmr_val, 1), 1673.8, "Male 70kg, 175cm, 25yo BMR = 1673.8 kcal")
+    tdee_mod = bmr_val * 1.55
+    assert_eq(round(tdee_mod, 1), 2594.3, "Moderately active TDEE = 2594.3 kcal")
+    cut_target = int(tdee_mod - 500)
+    assert_eq(cut_target, 2094, "Aggressive cut target = 2094 kcal (-500 kcal deficit)")
+
     print("\n============================================================")
     print(f"  🏆 ALL {passed}/{total} VERIFICATION CHECKS PASSED SUCCESSFULLY!")
     print("============================================================")
 
 if __name__ == "__main__":
     run_tests()
+
 

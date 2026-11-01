@@ -4,10 +4,13 @@ import com.fitlogpro.app.data.local.dao.WorkoutDao
 import com.fitlogpro.app.domain.calculator.OneRepMaxCalculator
 import com.fitlogpro.app.domain.calculator.StreakCalculator
 import com.fitlogpro.app.domain.calculator.VolumeCalculator
+import com.fitlogpro.app.domain.calculator.MuscleRecoveryCalculator
 import com.fitlogpro.app.domain.model.CalendarWorkoutDay
+import com.fitlogpro.app.domain.model.DailyReadiness
 import com.fitlogpro.app.domain.model.ExerciseProgressPoint
 import com.fitlogpro.app.domain.model.MuscleGroup
 import com.fitlogpro.app.domain.model.MuscleGroupDistribution
+import com.fitlogpro.app.domain.model.MuscleRecoveryStatus
 import com.fitlogpro.app.domain.model.VolumeHistoryPoint
 import com.fitlogpro.app.domain.model.WorkoutStreakInfo
 import kotlinx.coroutines.flow.Flow
@@ -156,5 +159,14 @@ class AnalyticsRepository(private val workoutDao: WorkoutDao) {
             )
         }
         days
+    }
+
+    fun getMuscleRecoveryStatus(): Flow<List<MuscleRecoveryStatus>> = workoutDao.getAllWorkoutsWithDetails().map { workouts ->
+        MuscleRecoveryCalculator.calculateMuscleRecovery(workouts)
+    }
+
+    fun getDailyReadiness(): Flow<DailyReadiness> = workoutDao.getAllWorkoutsWithDetails().map { workouts ->
+        val statuses = MuscleRecoveryCalculator.calculateMuscleRecovery(workouts)
+        MuscleRecoveryCalculator.calculateDailyReadiness(statuses, workouts)
     }
 }

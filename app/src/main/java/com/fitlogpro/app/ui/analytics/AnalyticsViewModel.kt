@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.fitlogpro.app.data.local.entity.ExerciseEntity
 import com.fitlogpro.app.data.repository.AnalyticsRepository
 import com.fitlogpro.app.data.repository.ExerciseRepository
+import com.fitlogpro.app.domain.model.DailyReadiness
 import com.fitlogpro.app.domain.model.ExerciseProgressPoint
 import com.fitlogpro.app.domain.model.MuscleGroupDistribution
+import com.fitlogpro.app.domain.model.MuscleRecoveryStatus
 import com.fitlogpro.app.domain.model.VolumeHistoryPoint
 import com.fitlogpro.app.domain.model.WorkoutStreakInfo
 import com.fitlogpro.app.ui.components.BarChartItem
@@ -52,6 +54,23 @@ class AnalyticsViewModel(
 
     val muscleDistribution: StateFlow<List<MuscleGroupDistribution>> = analyticsRepository.getMuscleGroupDistribution()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val muscleRecoveryList: StateFlow<List<MuscleRecoveryStatus>> = analyticsRepository.getMuscleRecoveryStatus()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val dailyReadiness: StateFlow<DailyReadiness> = analyticsRepository.getDailyReadiness()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            DailyReadiness(
+                score = 90,
+                headline = "Calculating...",
+                recommendation = "Analyzing recent workouts and fatigue...",
+                fatiguedMuscleCount = 0,
+                recoveringMuscleCount = 0,
+                freshMuscleCount = 6
+            )
+        )
 
     val allExercises: StateFlow<List<ExerciseEntity>> = exerciseRepository.getAllExercises()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())

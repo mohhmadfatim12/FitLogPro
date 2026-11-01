@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -60,7 +61,8 @@ import java.util.Locale
 
 enum class BodyScreenTab {
     MEASUREMENTS,
-    BMI_CALCULATOR
+    BMI_CALCULATOR,
+    TDEE_CALCULATOR
 }
 
 @Composable
@@ -122,7 +124,7 @@ fun BodyMeasurementScreen(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
             )
 
-            // Segmented Top Switch: Measurements vs BMI Calculator
+            // Segmented Top Switch: Measurements vs BMI vs TDEE
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -143,8 +145,8 @@ fun BodyMeasurementScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Measurements",
-                        fontSize = 13.sp,
+                        text = "Logs",
+                        fontSize = 12.sp,
                         fontWeight = if (isMeas) FontWeight.Bold else FontWeight.Medium,
                         color = if (isMeas) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -160,21 +162,30 @@ fun BodyMeasurementScreen(
                         .padding(vertical = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Calculate,
-                            contentDescription = null,
-                            tint = if (isBmi) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "BMI Calculator",
-                            fontSize = 13.sp,
-                            fontWeight = if (isBmi) FontWeight.Bold else FontWeight.Medium,
-                            color = if (isBmi) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
+                    Text(
+                        text = "BMI Gauge",
+                        fontSize = 12.sp,
+                        fontWeight = if (isBmi) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isBmi) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                val isTdee = currentTab == BodyScreenTab.TDEE_CALCULATOR
+                Box(
+                    modifier = Modifier
+                        .weight(1.1f)
+                        .clip(RoundedCornerShape(9.dp))
+                        .background(if (isTdee) MaterialTheme.colorScheme.surface else Color.Transparent)
+                        .clickable { currentTab = BodyScreenTab.TDEE_CALCULATOR }
+                        .padding(vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "TDEE & Macros",
+                        fontSize = 12.sp,
+                        fontWeight = if (isTdee) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isTdee) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
 
@@ -190,6 +201,12 @@ fun BodyMeasurementScreen(
                     onSaveWeight = { kg, notes ->
                         viewModel.saveMeasurement(MeasurementType.WEIGHT, kg, notes)
                     }
+                )
+            } else if (currentTab == BodyScreenTab.TDEE_CALCULATOR) {
+                TdeeCalculatorView(
+                    userHeightCm = userHeightCm,
+                    latestWeightKg = latestWeightKg,
+                    initialUnitIsMetric = isMetric
                 )
             } else {
                 // Measurements Tab
