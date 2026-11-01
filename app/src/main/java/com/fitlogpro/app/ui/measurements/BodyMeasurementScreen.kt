@@ -220,6 +220,10 @@ fun BodyMeasurementScreen(
                     }
                 }
 
+                val sortedMeasurements = remember(measurements) {
+                    measurements.sortedByDescending { it.recordedEpochMs }
+                }
+
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -329,9 +333,6 @@ fun BodyMeasurementScreen(
                     }
 
                     // Measurement Rows
-                    val sortedMeasurements = remember(measurements) {
-                        measurements.sortedByDescending { it.recordedEpochMs }
-                    }
                     items(sortedMeasurements, key = { it.id }) { item ->
                         MeasurementRow(
                             item = item,
@@ -402,7 +403,7 @@ private fun MeasurementRow(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = dateFormat.format(Date(item.recordedEpochMs)),
+                    text = dateText,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 11.sp
                 )
