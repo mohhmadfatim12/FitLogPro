@@ -15,13 +15,21 @@ object MuscleRecoveryCalculator {
 
     fun getBaseRecoveryHours(muscleGroup: MuscleGroup): Int {
         return when (muscleGroup) {
-            MuscleGroup.LEGS -> 72
+            MuscleGroup.LEGS, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS, MuscleGroup.GLUTES, MuscleGroup.CALVES -> 72
             MuscleGroup.BACK -> 72
             MuscleGroup.CHEST -> 60
             MuscleGroup.SHOULDERS -> 48
-            MuscleGroup.ARMS -> 36
+            MuscleGroup.ARMS, MuscleGroup.BICEPS, MuscleGroup.TRICEPS -> 36
             MuscleGroup.CORE -> 36
-            MuscleGroup.OTHER, MuscleGroup.FULL_BODY -> 48
+            MuscleGroup.OTHER, MuscleGroup.FULL_BODY, MuscleGroup.CARDIO -> 48
+        }
+    }
+
+    fun isExerciseTargetingGroup(exerciseGroup: MuscleGroup, targetGroup: MuscleGroup): Boolean {
+        return when (targetGroup) {
+            MuscleGroup.LEGS -> exerciseGroup in listOf(MuscleGroup.LEGS, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS, MuscleGroup.GLUTES, MuscleGroup.CALVES)
+            MuscleGroup.ARMS -> exerciseGroup in listOf(MuscleGroup.ARMS, MuscleGroup.BICEPS, MuscleGroup.TRICEPS)
+            else -> exerciseGroup == targetGroup
         }
     }
 
@@ -46,7 +54,7 @@ object MuscleRecoveryCalculator {
             workouts.forEach { w ->
                 val workoutStart = w.workout.startTimeEpochMs
                 if (workoutStart >= cutoffMs && workoutStart <= nowEpochMs) {
-                    val matchingExercises = w.exercises.filter { it.exercise.muscleGroup == group }
+                    val matchingExercises = w.exercises.filter { isExerciseTargetingGroup(it.exercise.muscleGroup, group) }
                     matchingExercises.forEach { we ->
                         val completedWorkingSets = we.sets.count { it.isCompleted && it.setType != SetType.WARMUP }
                         if (completedWorkingSets > 0) {
