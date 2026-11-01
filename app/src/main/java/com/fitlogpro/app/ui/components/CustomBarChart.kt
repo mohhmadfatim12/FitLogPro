@@ -27,7 +27,8 @@ import kotlin.math.max
 
 data class BarChartItem(
     val label: String,
-    val value: Double
+    val value: Double,
+    val subtext: String = ""
 )
 
 @Composable

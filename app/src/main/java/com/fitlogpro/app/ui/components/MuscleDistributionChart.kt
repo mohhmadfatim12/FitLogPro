@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fitlogpro.app.domain.model.MuscleDistribution
+import com.fitlogpro.app.domain.model.MuscleGroupDistribution
 
 val MuscleGroupColors = listOf(
     Color(0xFF2563EB), // Primary Royal Blue (Chest)
@@ -37,7 +37,7 @@ val MuscleGroupColors = listOf(
 
 @Composable
 fun MuscleDistributionChart(
-    distributions: List<MuscleDistribution>,
+    distributions: List<MuscleGroupDistribution>,
     modifier: Modifier = Modifier
 ) {
     val surfaceColor = MaterialTheme.colorScheme.surface
