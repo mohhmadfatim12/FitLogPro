@@ -75,6 +75,8 @@ import com.fitlogpro.app.ui.components.RestTimerFloatingBar
 import com.fitlogpro.app.ui.components.SetTypeBadge
 import com.fitlogpro.app.ui.theme.AccentGreen
 import com.fitlogpro.app.ui.theme.AccentGold
+import com.fitlogpro.app.ui.theme.ElectricLime
+import com.fitlogpro.app.ui.theme.ElectricLimeDark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -187,7 +189,7 @@ fun ActiveWorkoutScreen(
                         onClick = { viewModel.finishWorkout(onWorkoutFinished) },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = primaryColor,
-                            contentColor = Color.White
+                            contentColor = Color(0xFF0F172A)
                         ),
                         shape = RoundedCornerShape(10.dp),
                         modifier = Modifier.padding(end = 6.dp)
@@ -493,7 +495,7 @@ private fun ActiveSetRow(
     onOpenTypeChooser: () -> Unit,
     onDeleteSet: () -> Unit
 ) {
-    val rowBackground = if (set.isCompleted) Color(0xFFECFDF5) else Color.Transparent
+    val rowBackground = if (set.isCompleted) Color(0xFFF3FAD2) else Color.Transparent
 
     Row(
         modifier = Modifier
@@ -545,12 +547,12 @@ private fun ActiveSetRow(
             modifier = Modifier
                 .width(42.dp)
                 .height(38.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(if (set.isCompleted) Color(0xFF10B981) else MaterialTheme.colorScheme.surfaceVariant)
+                .clip(RoundedCornerShape(10.dp))
+                .background(if (set.isCompleted) ElectricLime else MaterialTheme.colorScheme.surfaceVariant)
                 .border(
                     1.dp,
-                    if (set.isCompleted) Color(0xFF059669) else MaterialTheme.colorScheme.outline,
-                    RoundedCornerShape(8.dp)
+                    if (set.isCompleted) ElectricLimeDark else MaterialTheme.colorScheme.outline,
+                    RoundedCornerShape(10.dp)
                 )
                 .clickable(onClick = onToggleComplete),
             contentAlignment = Alignment.Center
@@ -559,7 +561,7 @@ private fun ActiveSetRow(
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = "Completed",
-                    tint = Color.White,
+                    tint = Color(0xFF0F172A),
                     modifier = Modifier.size(20.dp)
                 )
             } else {

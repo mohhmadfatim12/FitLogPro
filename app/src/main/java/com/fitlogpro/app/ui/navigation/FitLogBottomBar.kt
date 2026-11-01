@@ -15,11 +15,13 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fitlogpro.app.ui.theme.ElectricLime
 
 data class BottomNavTab(
     val title: String,
@@ -42,9 +44,9 @@ fun FitLogBottomBar(
 ) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
-        tonalElevation = 2.dp,
+        tonalElevation = 0.dp,
         modifier = Modifier.border(
-            width = 0.5.dp,
+            width = 1.dp,
             color = MaterialTheme.colorScheme.outline,
             shape = RectangleShape
         )
@@ -70,9 +72,9 @@ fun FitLogBottomBar(
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
-                    selectedTextColor = MaterialTheme.colorScheme.primary,
-                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                    selectedIconColor = Color(0xFF0F172A),
+                    selectedTextColor = Color(0xFF0F172A),
+                    indicatorColor = ElectricLime,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )

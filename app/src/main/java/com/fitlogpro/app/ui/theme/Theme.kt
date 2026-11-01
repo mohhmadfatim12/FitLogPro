@@ -12,10 +12,10 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
-    primary = PrimaryBlue,
-    onPrimary = Color.White,
-    primaryContainer = PrimaryBlueContainer,
-    onPrimaryContainer = PrimaryBlue,
+    primary = ElectricLime,
+    onPrimary = ElectricLimeText,
+    primaryContainer = ElectricLimeContainer,
+    onPrimaryContainer = ElectricLimeText,
     secondary = AccentGreen,
     onSecondary = Color.White,
     secondaryContainer = AccentGreenContainer,
@@ -32,10 +32,10 @@ private val LightColorScheme = lightColorScheme(
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = PrimaryBlueLight,
-    onPrimary = Color.White,
-    primaryContainer = Color(0xFF1E293B),
-    onPrimaryContainer = Color(0xFF93C5FD),
+    primary = ElectricLime,
+    onPrimary = ElectricLimeText,
+    primaryContainer = Color(0xFF212E12),
+    onPrimaryContainer = ElectricLimeBright,
     secondary = AccentGreen,
     onSecondary = Color.White,
     secondaryContainer = Color(0xFF064E3B),
@@ -63,9 +63,11 @@ fun FitLogProTheme(
             val window = (view.context as? Activity)?.window
             if (window != null) {
                 window.statusBarColor = colorScheme.background.toArgb()
-                window.navigationBarColor = colorScheme.surface.toArgb()
-                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
-                WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !darkTheme
+                window.navigationBarColor = colorScheme.background.toArgb()
+                WindowCompat.getInsetsController(window, view).apply {
+                    isAppearanceLightStatusBars = !darkTheme
+                    isAppearanceLightNavigationBars = !darkTheme
+                }
             }
         }
     }

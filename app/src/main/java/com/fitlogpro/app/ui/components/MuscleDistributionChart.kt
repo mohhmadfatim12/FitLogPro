@@ -48,9 +48,9 @@ fun MuscleDistributionChart(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(20.dp))
             .background(surfaceColor)
-            .border(1.dp, outlineColor, RoundedCornerShape(12.dp))
+            .border(1.dp, outlineColor, RoundedCornerShape(20.dp))
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {

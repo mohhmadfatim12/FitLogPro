@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fitlogpro.app.ui.theme.PrimaryBlue
+import com.fitlogpro.app.ui.theme.ElectricLime
 
 @Composable
 fun StatCard(
@@ -31,7 +32,7 @@ fun StatCard(
     value: String,
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
-    iconTint: Color = PrimaryBlue,
+    iconTint: Color = ElectricLime,
     subtitle: String? = null
 ) {
     val cardBackground = MaterialTheme.colorScheme.surface
@@ -41,42 +42,52 @@ fun StatCard(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(18.dp))
             .background(cardBackground)
-            .border(1.dp, cardBorder, RoundedCornerShape(14.dp))
+            .border(1.dp, cardBorder, RoundedCornerShape(18.dp))
             .padding(14.dp)
     ) {
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (icon != null) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = iconTint,
-                        modifier = Modifier.size(16.dp)
-                    )
+                    Box(
+                        modifier = Modifier
+                            .size(26.dp)
+                            .clip(CircleShape)
+                            .background(iconTint.copy(alpha = 0.15f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            tint = iconTint,
+                            modifier = Modifier.size(15.dp)
+                        )
+                    }
                     Spacer(modifier = Modifier.width(6.dp))
                 }
                 Text(
                     text = title,
                     color = textSecondary,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1
                 )
             }
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = value,
                 color = textPrimary,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Black
             )
             if (subtitle != null) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = subtitle,
-                    color = textSecondary,
-                    fontSize = 11.sp
+                    color = textSecondary.copy(alpha = 0.8f),
+                    fontSize = 10.sp,
+                    maxLines = 1
                 )
             }
         }
