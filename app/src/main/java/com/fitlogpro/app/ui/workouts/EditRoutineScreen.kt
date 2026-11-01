@@ -203,14 +203,14 @@ fun EditRoutineScreen(
                     Button(
                         onClick = { showExercisePicker = true },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = Color.White
+                            containerColor = com.fitlogpro.app.ui.theme.ElectricLime,
+                            contentColor = com.fitlogpro.app.ui.theme.ElectricLimeText
                         ),
-                        shape = RoundedCornerShape(10.dp)
+                        shape = RoundedCornerShape(12.dp)
                     ) {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
+                        Icon(imageVector = Icons.Default.Add, contentDescription = null, tint = com.fitlogpro.app.ui.theme.ElectricLimeText, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Add Exercise", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        Text("Add Exercise", color = com.fitlogpro.app.ui.theme.ElectricLimeText, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                     }
                 }
             }

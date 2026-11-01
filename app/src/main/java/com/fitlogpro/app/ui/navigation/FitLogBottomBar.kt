@@ -66,7 +66,7 @@ fun FitLogBottomBar(
                 label = {
                     Text(
                         text = tab.title,
-                        fontSize = 11.sp,
+                        fontSize = 10.sp,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                         maxLines = 1
                     )

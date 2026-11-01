@@ -263,15 +263,18 @@ fun ExerciseDetailScreen(
             item {
                 Button(
                     onClick = { onViewCharts(exerciseId) },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = com.fitlogpro.app.ui.theme.ElectricLime,
+                        contentColor = com.fitlogpro.app.ui.theme.ElectricLimeText
+                    ),
+                    shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.ShowChart, contentDescription = null, tint = Color.White)
+                    Icon(imageVector = Icons.Default.ShowChart, contentDescription = null, tint = com.fitlogpro.app.ui.theme.ElectricLimeText)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("View Progress Charts", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                    Text("View Progress Charts", color = com.fitlogpro.app.ui.theme.ElectricLimeText, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 }
             }
         }

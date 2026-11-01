@@ -122,7 +122,7 @@ fun BodyMeasurementScreen(
                     ) {
                         Text(
                             text = type.displayName,
-                            color = if (isSel) Color.White else MaterialTheme.colorScheme.onSurface,
+                            color = if (isSel) com.fitlogpro.app.ui.theme.ElectricLimeText else MaterialTheme.colorScheme.onSurface,
                             fontSize = 12.sp,
                             fontWeight = if (isSel) FontWeight.Bold else FontWeight.Medium
                         )

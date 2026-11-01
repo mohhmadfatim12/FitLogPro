@@ -39,12 +39,20 @@ fun EmptyStateView(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-            modifier = Modifier.size(56.dp)
-        )
+        androidx.compose.foundation.layout.Box(
+            modifier = Modifier
+                .size(72.dp)
+                .clip(androidx.compose.foundation.shape.CircleShape)
+                .background(com.fitlogpro.app.ui.theme.ElectricLimeContainer),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = Color(0xFF0F172A),
+                modifier = Modifier.size(36.dp)
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = title,
@@ -66,10 +74,10 @@ fun EmptyStateView(
             Button(
                 onClick = onActionClick,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = Color.White
+                    containerColor = com.fitlogpro.app.ui.theme.ElectricLime,
+                    contentColor = com.fitlogpro.app.ui.theme.ElectricLimeText
                 ),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(14.dp)
             ) {
                 Text(
                     text = actionLabel,

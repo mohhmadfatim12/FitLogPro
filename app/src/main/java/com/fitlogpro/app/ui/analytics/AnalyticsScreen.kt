@@ -15,11 +15,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -150,18 +152,27 @@ fun AnalyticsScreen(
                         Box {
                             Box(
                                 modifier = Modifier
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                                    .border(1.dp, outlineColor, RoundedCornerShape(8.dp))
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(surfaceColor)
+                                    .border(1.dp, outlineColor, RoundedCornerShape(12.dp))
                                     .clickable { showExerciseMenu = true }
-                                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                                    .padding(horizontal = 12.dp, vertical = 7.dp)
                             ) {
-                                Text(
-                                    text = selectedExercise?.name ?: "Select Exercise",
-                                    color = primaryColor,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = selectedExercise?.name ?: "Select Exercise",
+                                        color = textPrimary,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Icon(
+                                        imageVector = Icons.Default.ArrowDropDown,
+                                        contentDescription = null,
+                                        tint = textSecondary,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
                             }
                             DropdownMenu(
                                 expanded = showExerciseMenu,
@@ -187,7 +198,7 @@ fun AnalyticsScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(10.dp))
+                            .clip(RoundedCornerShape(12.dp))
                             .background(MaterialTheme.colorScheme.surfaceVariant)
                             .padding(4.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -197,15 +208,15 @@ fun AnalyticsScreen(
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(if (isSel) surfaceColor else Color.Transparent)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(if (isSel) com.fitlogpro.app.ui.theme.ElectricLime else Color.Transparent)
                                     .clickable { viewModel.selectMetric(metric) }
-                                    .padding(vertical = 6.dp),
+                                    .padding(vertical = 8.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = metric.title,
-                                    color = if (isSel) primaryColor else textSecondary,
+                                    color = if (isSel) com.fitlogpro.app.ui.theme.ElectricLimeText else textSecondary,
                                     fontSize = 11.sp,
                                     fontWeight = if (isSel) FontWeight.Bold else FontWeight.Medium
                                 )

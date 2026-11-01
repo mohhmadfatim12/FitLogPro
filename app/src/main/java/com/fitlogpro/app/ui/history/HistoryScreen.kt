@@ -155,12 +155,12 @@ private fun TabButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val bg = if (isSelected) MaterialTheme.colorScheme.surface else Color.Transparent
-    val contentColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+    val bg = if (isSelected) com.fitlogpro.app.ui.theme.ElectricLime else Color.Transparent
+    val contentColor = if (isSelected) com.fitlogpro.app.ui.theme.ElectricLimeText else MaterialTheme.colorScheme.onSurfaceVariant
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(10.dp))
             .background(bg)
             .clickable(onClick = onClick)
             .padding(vertical = 8.dp),
@@ -260,12 +260,19 @@ private fun WorkoutHistoryCard(
                     Text("${durationMin}m", color = textPrimary, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
                 }
 
-                Text(
-                    text = "${String.format("%,.0f", workout.totalVolumeKg)} kg volume",
-                    color = primaryColor,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                ) {
+                    Text(
+                        text = "${String.format("%,.0f", workout.totalVolumeKg)} kg",
+                        color = textPrimary,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
                 Text(
                     text = "${item.exercises.size} exercises",

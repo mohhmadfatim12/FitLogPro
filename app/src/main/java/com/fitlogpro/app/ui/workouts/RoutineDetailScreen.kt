@@ -95,17 +95,17 @@ fun RoutineDetailScreen(
                 Button(
                     onClick = { onStartWorkout(routineId) },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = Color.White
+                        containerColor = com.fitlogpro.app.ui.theme.ElectricLime,
+                        contentColor = com.fitlogpro.app.ui.theme.ElectricLimeText
                     ),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(52.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null, tint = Color.White)
+                    Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null, tint = com.fitlogpro.app.ui.theme.ElectricLimeText)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = "Start Workout", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text(text = "Start Workout", color = com.fitlogpro.app.ui.theme.ElectricLimeText, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }
             }
         }

@@ -156,16 +156,16 @@ private fun FilterChip(
 ) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
-            .border(1.dp, if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(10.dp))
+            .background(if (isSelected) com.fitlogpro.app.ui.theme.ElectricLime else MaterialTheme.colorScheme.surfaceVariant)
+            .border(1.dp, if (isSelected) com.fitlogpro.app.ui.theme.ElectricLime else MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(10.dp))
             .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 6.dp),
+            .padding(horizontal = 14.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = label,
-            color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+            color = if (isSelected) com.fitlogpro.app.ui.theme.ElectricLimeText else MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 12.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
         )

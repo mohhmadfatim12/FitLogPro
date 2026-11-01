@@ -162,7 +162,12 @@ fun SettingsScreen(
                         Switch(
                             checked = darkTheme,
                             onCheckedChange = { viewModel.setDarkTheme(it) },
-                            colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = MaterialTheme.colorScheme.primary)
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color(0xFF0F172A),
+                                checkedTrackColor = com.fitlogpro.app.ui.theme.ElectricLime,
+                                uncheckedThumbColor = Color.White,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                            )
                         )
                     }
 
@@ -181,7 +186,12 @@ fun SettingsScreen(
                         Switch(
                             checked = keepScreenOn,
                             onCheckedChange = { viewModel.setKeepScreenOn(it) },
-                            colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = MaterialTheme.colorScheme.primary)
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color(0xFF0F172A),
+                                checkedTrackColor = com.fitlogpro.app.ui.theme.ElectricLime,
+                                uncheckedThumbColor = Color.White,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                            )
                         )
                     }
 
@@ -197,16 +207,20 @@ fun SettingsScreen(
                                 Box(
                                     modifier = Modifier
                                         .weight(1f)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(if (isSel) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
-                                        .border(1.dp, if (isSel) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(if (isSel) com.fitlogpro.app.ui.theme.ElectricLime else MaterialTheme.colorScheme.surfaceVariant)
+                                        .border(
+                                            1.dp,
+                                            if (isSel) com.fitlogpro.app.ui.theme.ElectricLime else MaterialTheme.colorScheme.outlineVariant,
+                                            RoundedCornerShape(10.dp)
+                                        )
                                         .clickable { viewModel.setDefaultRestSeconds(sec) }
                                         .padding(vertical = 8.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
                                         text = "${sec}s",
-                                        color = if (isSel) Color.White else MaterialTheme.colorScheme.onSurface,
+                                        color = if (isSel) com.fitlogpro.app.ui.theme.ElectricLimeText else MaterialTheme.colorScheme.onSurface,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 12.sp
                                     )
@@ -230,7 +244,12 @@ fun SettingsScreen(
                         Switch(
                             checked = restVibration,
                             onCheckedChange = { viewModel.setRestVibration(it) },
-                            colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = MaterialTheme.colorScheme.primary)
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color(0xFF0F172A),
+                                checkedTrackColor = com.fitlogpro.app.ui.theme.ElectricLime,
+                                uncheckedThumbColor = Color.White,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                            )
                         )
                     }
                 }
@@ -290,24 +309,30 @@ fun SettingsScreen(
                                     showExportResultDialog = Pair("FitLog Pro JSON Backup", backupJson)
                                 }
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = com.fitlogpro.app.ui.theme.ElectricLime,
+                                contentColor = com.fitlogpro.app.ui.theme.ElectricLimeText
+                            ),
+                            shape = RoundedCornerShape(12.dp),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Icon(imageVector = Icons.Default.Download, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
+                            Icon(imageVector = Icons.Default.Download, contentDescription = null, tint = com.fitlogpro.app.ui.theme.ElectricLimeText, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Create Backup", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            Text("Create Backup", color = com.fitlogpro.app.ui.theme.ElectricLimeText, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                         }
 
                         Button(
                             onClick = { showRestoreDialog = true },
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                            shape = RoundedCornerShape(10.dp),
-                            modifier = Modifier.weight(1f).border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(10.dp))
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                contentColor = MaterialTheme.colorScheme.onSurface
+                            ),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.weight(1f).border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(12.dp))
                         ) {
-                            Icon(imageVector = Icons.Default.Restore, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
+                            Icon(imageVector = Icons.Default.Restore, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Restore Backup", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            Text("Restore Backup", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                         }
                     }
                 }
@@ -367,9 +392,13 @@ fun SettingsScreen(
                         Toast.makeText(context, "Copied to clipboard!", Toast.LENGTH_SHORT).show()
                         showExportResultDialog = null
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = com.fitlogpro.app.ui.theme.ElectricLime,
+                        contentColor = com.fitlogpro.app.ui.theme.ElectricLimeText
+                    ),
+                    shape = RoundedCornerShape(10.dp)
                 ) {
-                    Text("Copy to Clipboard", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("Copy to Clipboard", color = com.fitlogpro.app.ui.theme.ElectricLimeText, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -454,9 +483,13 @@ fun SettingsScreen(
                         }
                     },
                     enabled = isValid,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = com.fitlogpro.app.ui.theme.ElectricLime,
+                        contentColor = com.fitlogpro.app.ui.theme.ElectricLimeText
+                    ),
+                    shape = RoundedCornerShape(10.dp)
                 ) {
-                    Text("Confirm Restore", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("Confirm Restore", color = com.fitlogpro.app.ui.theme.ElectricLimeText, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -477,19 +510,28 @@ private fun SettingsSection(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.surface)
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(14.dp))
-            .padding(16.dp)
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
+            .padding(18.dp)
     ) {
         Column {
-            Text(
-                text = title,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 0.5.sp
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .clip(androidx.compose.foundation.shape.CircleShape)
+                        .background(com.fitlogpro.app.ui.theme.ElectricLime)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = title,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.3.sp
+                )
+            }
             Spacer(modifier = Modifier.height(14.dp))
             content()
         }
@@ -504,15 +546,15 @@ private fun UnitToggleChip(
 ) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+            .clip(RoundedCornerShape(8.dp))
+            .background(if (isSelected) com.fitlogpro.app.ui.theme.ElectricLime else Color.Transparent)
             .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = label,
-            color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+            color = if (isSelected) com.fitlogpro.app.ui.theme.ElectricLimeText else MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold
         )
@@ -527,17 +569,17 @@ private fun ExportButton(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surfaceVariant)
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
             .padding(vertical = 10.dp, horizontal = 12.dp),
         contentAlignment = Alignment.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = Icons.Default.FileDownload, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
+            Icon(imageVector = Icons.Default.FileDownload, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(16.dp))
             Spacer(modifier = Modifier.width(6.dp))
-            Text(label, color = MaterialTheme.colorScheme.onSurface, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+            Text(label, color = MaterialTheme.colorScheme.onSurface, fontSize = 12.sp, fontWeight = FontWeight.Bold)
         }
     }
 }

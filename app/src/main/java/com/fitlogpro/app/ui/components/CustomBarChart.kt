@@ -52,12 +52,84 @@ fun CustomBarChart(
         contentAlignment = Alignment.Center
     ) {
         if (items.isEmpty()) {
-            Text(
-                text = "No volume data logged yet.\nLog workouts to view weekly volume chart.",
-                color = textMuted,
-                fontSize = 13.sp,
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-            )
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                // Skeleton preview bars behind
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    val width = size.width
+                    val height = size.height
+                    val bottomPadding = 32f
+                    val topPadding = 20f
+                    val availableHeight = height - bottomPadding - topPadding
+                    val previewFractions = listOf(0.35f, 0.65f, 0.45f, 0.85f, 0.55f, 0.70f, 0.40f)
+                    val days = listOf("M", "T", "W", "T", "F", "S", "S")
+                    val barCount = previewFractions.size
+                    val barSpacing = width * 0.05f
+                    val totalSpacing = barSpacing * (barCount + 1)
+                    val barWidth = (width - totalSpacing) / barCount
+
+                    previewFractions.forEachIndexed { index, fraction ->
+                        val x = barSpacing + index * (barWidth + barSpacing)
+                        val barHeight = availableHeight * fraction
+                        val y = topPadding + (availableHeight - barHeight)
+                        drawRoundRect(
+                            color = outlineColor.copy(alpha = 0.35f),
+                            topLeft = Offset(x, y),
+                            size = Size(barWidth, barHeight),
+                            cornerRadius = CornerRadius(6.dp.toPx(), 6.dp.toPx())
+                        )
+                        drawContext.canvas.nativeCanvas.apply {
+                            val paint = android.graphics.Paint().apply {
+                                color = android.graphics.Color.LTGRAY
+                                textSize = 24f
+                                textAlign = android.graphics.Paint.Align.CENTER
+                                isAntiAlias = true
+                            }
+                            drawText(days[index], x + barWidth / 2f, height - 6f, paint)
+                        }
+                    }
+                }
+
+                // Frosted center pill badge
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(surfaceColor.copy(alpha = 0.94f))
+                        .border(1.dp, outlineColor, RoundedCornerShape(16.dp))
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    androidx.compose.foundation.layout.Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(androidx.compose.foundation.shape.CircleShape)
+                                .background(com.fitlogpro.app.ui.theme.ElectricLimeContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            androidx.compose.material3.Icon(
+                                imageVector = androidx.compose.material.icons.Icons.Default.BarChart,
+                                contentDescription = null,
+                                tint = Color(0xFF0F172A),
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                        androidx.compose.foundation.layout.Spacer(modifier = Modifier.width(10.dp))
+                        androidx.compose.foundation.layout.Column {
+                            Text(
+                                text = "Weekly Volume",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = 13.sp,
+                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                            )
+                            Text(
+                                text = "Log your first session to track volume",
+                                color = textMuted,
+                                fontSize = 11.sp
+                            )
+                        }
+                    }
+                }
+            }
         } else {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val width = size.width

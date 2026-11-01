@@ -42,9 +42,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.foundation.Canvas
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -316,18 +319,35 @@ private fun MonthlyActivityBanner() {
                     )
                 }
 
+                // Circular Progress Ring Gauge
                 Box(
-                    modifier = Modifier
-                        .size(38.dp)
-                        .clip(CircleShape)
-                        .background(ElectricLime),
+                    modifier = Modifier.size(54.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        tint = ElectricLimeText,
-                        modifier = Modifier.size(20.dp)
+                    Canvas(modifier = Modifier.fillMaxSize()) {
+                        val strokeWidth = 5.dp.toPx()
+                        // Track ring
+                        drawArc(
+                            color = borderCol,
+                            startAngle = 0f,
+                            sweepAngle = 360f,
+                            useCenter = false,
+                            style = Stroke(width = strokeWidth)
+                        )
+                        // Progress arc (88%)
+                        drawArc(
+                            color = ElectricLime,
+                            startAngle = -90f,
+                            sweepAngle = 0.88f * 360f,
+                            useCenter = false,
+                            style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                        )
+                    }
+                    Text(
+                        text = "88%",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Black
                     )
                 }
             }
@@ -457,8 +477,8 @@ private fun RoutineCard(
 ) {
     val dateFormat = SimpleDateFormat("MMM d", Locale.US)
     val lastDoneText = routine.lastPerformedEpochMs?.let {
-        "Last performed: ${dateFormat.format(Date(it))}"
-    } ?: "Never performed"
+        "Last: ${dateFormat.format(Date(it))}"
+    } ?: "New Routine"
 
     val cardBg = MaterialTheme.colorScheme.surface
     val cardBorder = MaterialTheme.colorScheme.outline
@@ -468,54 +488,74 @@ private fun RoutineCard(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(22.dp))
             .background(cardBg)
-            .border(1.dp, cardBorder, RoundedCornerShape(20.dp))
+            .border(1.dp, cardBorder, RoundedCornerShape(22.dp))
             .clickable(onClick = onCardClick)
-            .padding(18.dp)
+            .padding(16.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Circular Routine Avatar Icon
+            Box(
+                modifier = Modifier
+                    .size(46.dp)
+                    .clip(CircleShape)
+                    .background(ElectricLimeContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.FitnessCenter,
+                    contentDescription = null,
+                    tint = Color(0xFF0F172A),
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(14.dp))
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = routine.name,
                     color = textPrimary,
-                    fontSize = 17.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
                 if (routine.description.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = routine.description,
                         color = textSecondary,
                         fontSize = 12.sp,
-                        maxLines = 2
+                        maxLines = 1
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .padding(horizontal = 8.dp, vertical = 3.dp)
-                ) {
-                    Text(
-                        text = lastDoneText,
-                        color = textSecondary,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                Spacer(modifier = Modifier.height(6.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = lastDoneText,
+                            color = textSecondary,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(10.dp))
 
             IconButton(
                 onClick = onStart,
                 modifier = Modifier
-                    .size(46.dp)
+                    .size(44.dp)
                     .clip(CircleShape)
                     .background(ElectricLime)
             ) {

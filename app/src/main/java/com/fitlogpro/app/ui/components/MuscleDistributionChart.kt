@@ -55,15 +55,83 @@ fun MuscleDistributionChart(
         contentAlignment = Alignment.Center
     ) {
         if (distributions.isEmpty()) {
-            Text(
-                text = "No muscle distribution data available.\nLog workouts to view muscle group analytics.",
-                color = textMuted,
-                fontSize = 13.sp,
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 24.dp)
-            )
+                    .padding(vertical = 4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                androidx.compose.foundation.layout.Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Muscle Balance",
+                        color = textPrimary,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .padding(horizontal = 8.dp, vertical = 3.dp)
+                    ) {
+                        Text(
+                            text = "0 sets logged",
+                            color = textMuted,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                // Multi-segment preview bar in soft tints
+                androidx.compose.foundation.layout.Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(12.dp)
+                        .clip(RoundedCornerShape(6.dp))
+                ) {
+                    listOf(0.28f, 0.24f, 0.20f, 0.16f, 0.12f).forEachIndexed { idx, frac ->
+                        Box(
+                            modifier = Modifier
+                                .weight(frac)
+                                .height(12.dp)
+                                .background(MuscleGroupColors[idx % MuscleGroupColors.size].copy(alpha = 0.35f))
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                // Circular Muscle Category Pills
+                androidx.compose.foundation.layout.Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+                ) {
+                    listOf("Chest", "Back", "Legs", "Arms", "Core").forEachIndexed { idx, name ->
+                        androidx.compose.foundation.layout.Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(8.dp)
+                                    .clip(CircleShape)
+                                    .background(MuscleGroupColors[idx % MuscleGroupColors.size])
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = name,
+                                color = textMuted,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+            }
         } else {
             Column {
                 Text(

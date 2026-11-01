@@ -252,7 +252,7 @@ fun AddEditExerciseScreen(
                             ) {
                                 Text(
                                     text = "${sec}s",
-                                    color = if (isSel) Color.White else MaterialTheme.colorScheme.onSurface,
+                                    color = if (isSel) com.fitlogpro.app.ui.theme.ElectricLimeText else MaterialTheme.colorScheme.onSurface,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 12.sp
                                 )
@@ -296,13 +296,16 @@ fun AddEditExerciseScreen(
                         }
                     },
                     enabled = name.isNotBlank(),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = com.fitlogpro.app.ui.theme.ElectricLime,
+                        contentColor = com.fitlogpro.app.ui.theme.ElectricLimeText
+                    ),
+                    shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Text("Create Exercise", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                    Text("Create Exercise", color = com.fitlogpro.app.ui.theme.ElectricLimeText, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 }
             }
         }
