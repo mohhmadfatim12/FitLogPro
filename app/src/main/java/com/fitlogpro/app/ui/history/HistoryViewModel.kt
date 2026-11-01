@@ -25,6 +25,8 @@ class HistoryViewModel(
     val workoutsWithDetails: StateFlow<List<WorkoutWithDetails>> = workoutRepository.getAllWorkoutsWithDetails()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    val workouts: StateFlow<List<WorkoutWithDetails>> = workoutsWithDetails
+
     private val cal = Calendar.getInstance()
     private val _selectedYear = MutableStateFlow(cal.get(Calendar.YEAR))
     val selectedYear: StateFlow<Int> = _selectedYear.asStateFlow()

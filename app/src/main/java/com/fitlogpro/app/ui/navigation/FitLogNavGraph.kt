@@ -263,9 +263,11 @@ fun FitLogNavGraph(
             ) { backStackEntry ->
                 val exIdStr = backStackEntry.arguments?.getString("exerciseId")
                 val exId = exIdStr?.toLongOrNull()
+                if (exId != null) {
+                    analyticsViewModel.selectExercise(exId)
+                }
                 AnalyticsScreen(
-                    viewModel = analyticsViewModel,
-                    initialExerciseId = exId
+                    viewModel = analyticsViewModel
                 )
             }
 

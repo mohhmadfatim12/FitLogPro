@@ -48,7 +48,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fitlogpro.app.data.local.relation.WorkoutWithDetails
+import com.fitlogpro.app.data.local.entity.WorkoutWithDetails
+import com.fitlogpro.app.domain.model.CalendarWorkoutDay
 import com.fitlogpro.app.ui.components.EmptyStateView
 import com.fitlogpro.app.ui.theme.AccentGold
 import java.text.DateFormatSymbols
