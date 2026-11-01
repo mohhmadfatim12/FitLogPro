@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fitlogpro.app.ui.theme.PrimaryBlue
 import kotlin.math.max
 
 data class ChartDataPoint(
@@ -34,7 +35,7 @@ data class ChartDataPoint(
 fun CustomLineChart(
     points: List<ChartDataPoint>,
     unitSuffix: String = "kg",
-    lineColor: Color = AccentOrange,
+    lineColor: Color = PrimaryBlue,
     modifier: Modifier = Modifier
 ) {
     val surfaceColor = androidx.compose.material3.MaterialTheme.colorScheme.surface

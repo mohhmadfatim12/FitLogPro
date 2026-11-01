@@ -218,7 +218,7 @@ fun AnalyticsScreen(
                     // Line Chart for Selected Metric
                     CustomLineChart(
                         points = chartPoints,
-                        unitSuffix = if (selectedMetric == ChartMetric.MOST_REPS) "reps" else "kg",
+                        unitSuffix = selectedMetric.unitSuffix,
                         lineColor = primaryColor
                     )
                 }
